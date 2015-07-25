@@ -34,18 +34,23 @@ public class PopulateDatabase extends AsyncTask<Void, Void, String> {
     private Exception exception = null;
     private SwipeRefreshLayout swipeRefreshLayout;
 
+    private long lastUpdate;
+
     public PopulateDatabase(ProgressDialog dialog, ProductDB  db, Activity activity, SwipeRefreshLayout swipeRefreshLayout)
     {
         this.dialog = dialog;
         this.db = db;
         this.activity = activity;
         this.swipeRefreshLayout = swipeRefreshLayout;
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(activity);
+        this.lastUpdate = sp.getLong("lastQueried", 0);
     }
 
     @Override
     protected String doInBackground(Void... params)
     {
-        String url = StaticReferences.BASE_URL + "listProduct.php?limit=-1";
+        String url = StaticReferences.BASE_URL + "listProduct.php?limit=-1&lastupdate=" + (lastUpdate / 1000);
         String tmp = "";
 
         Log.d("Populate", url);

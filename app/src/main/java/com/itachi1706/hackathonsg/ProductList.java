@@ -132,7 +132,7 @@ public class ProductList extends AppCompatActivity implements SwipeRefreshLayout
     private void populateWithRealData()
     {
         ProductDB db = new ProductDB(this);
-        db.dropEverythingAndRebuild();
+        //db.dropEverythingAndRebuild();
 
         ProgressDialog dialog = new ProgressDialog(this);
         dialog.setTitle("Starting Stuff");
@@ -150,6 +150,8 @@ public class ProductList extends AppCompatActivity implements SwipeRefreshLayout
         //Drop and repopulate database
         ProductDB db = new ProductDB(this);
         SampleJSONProducts.populateDatabase(db);
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        sp.edit().remove("lastQueried").apply();
 
         //Update adapter
         productList = db.getAllProducts();
