@@ -6,6 +6,13 @@
             android:defaultValue="true"
             android:key="compactList"
             android:summary="Whether to compact the product view" />
+
+        <CheckBoxPreference
+            android:title="Hide Completed Cart Products"
+            android:defaultValue="false"
+            android:key="hideCart"
+            android:summary="Toggles hiding of purchased products from the cart" />
+
         <CheckBoxPreference
             android:title="Enable Pebble Background Service"
             android:defaultValue="true"

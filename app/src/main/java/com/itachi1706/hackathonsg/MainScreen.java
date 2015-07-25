@@ -145,6 +145,17 @@ public class MainScreen extends AppCompatActivity {
         JSONStoredProducts[] prodTmp = gson.fromJson(json, JSONGeneralStoredProducts.class).getStorage();
         ArrayList<JSONStoredProducts> prod = new ArrayList<>(Arrays.asList(prodTmp));
 
+        //Check if completed cart is hidden
+        if (sp.getBoolean("hideCart", false))
+        {
+            //Hide completed items
+            for (JSONStoredProducts pro : prod)
+            {
+                if (pro.isPurchased())
+                    prod.remove(pro);
+            }
+        }
+
         adapter.updateAdapter(prod);
         adapter.notifyDataSetChanged();
     }
