@@ -46,7 +46,7 @@ public class ProductViewAdapter extends ArrayAdapter<JSONProducts>
         JSONProducts i = items.get(position);
 
         ImageView productImage = (ImageView) v.findViewById(R.id.ivProducts);
-        TextView productName = (TextView) v.findViewById(R.id.tvName);
+        TextView productName = (TextView) v.findViewById(R.id.tvStore);
         TextView productOrigPrice = (TextView) v.findViewById(R.id.tvOriginalPrice);
         TextView productDiscPrice = (TextView) v.findViewById(R.id.tvDiscountedPrice);
         TextView productAvailbility = (TextView) v.findViewById(R.id.tvAvailability);
@@ -78,15 +78,17 @@ public class ProductViewAdapter extends ArrayAdapter<JSONProducts>
 
             if (productOrigPrice != null)
             {
-                productOrigPrice.setText("SG$" + df.format(i.getRetailPrice()));
+                //productOrigPrice.setText("SG$" + df.format(i.getRetailPrice()));
+                productOrigPrice.setText("SG" + i.getRetailPrice());
             }
 
             if (productDiscPrice != null) {
 
                 //Check if there's a disc price
-                if (i.getOfferPrice() != 0)
+                if (i.getOfferPrice() != null && !i.getOfferPrice().equals(""))
                 {
-                    productDiscPrice.setText("SG$" + df.format(i.getOfferPrice()));
+                    //productDiscPrice.setText("SG$" + df.format(i.getOfferPrice()));
+                    productDiscPrice.setText("SG" + i.getOfferPrice());
                     productDiscPrice.setVisibility(View.VISIBLE);
                     if (productOrigPrice != null)
                     {

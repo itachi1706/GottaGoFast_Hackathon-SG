@@ -32,6 +32,7 @@ public class ProductDB extends SQLiteOpenHelper{
     public static final String PRODUCT_OFFER_PRICE = "offerprice";
     public static final String PRODUCT_IMAGE = "image";
     public static final String PRODUCT_STOCK = "stock";
+    public static final String PRODUCT_STORE = "store";
 
     public ProductDB(Context context)
     {
@@ -42,8 +43,8 @@ public class ProductDB extends SQLiteOpenHelper{
     public void onCreate(SQLiteDatabase db)
     {
         String CREATE_PRODUCT_TABLE = "CREATE TABLE " + TABLE_PRODUCT + "(" + PRODUCT_KEY + " INTEGER PRIMARY KEY,"
-                + PRODUCT_TITLE + " TEXT," + PRODUCT_RETAIL_PRICE + " DOUBLE," + PRODUCT_OFFER_PRICE + " DOUBLE,"
-                + PRODUCT_IMAGE + " TEXT," + PRODUCT_STOCK + " INTEGER);";
+                + PRODUCT_TITLE + " TEXT," + PRODUCT_RETAIL_PRICE + " TEXT," + PRODUCT_OFFER_PRICE + " TEXT,"
+                + PRODUCT_IMAGE + " TEXT," + PRODUCT_STOCK + " INTEGER," + PRODUCT_STORE + " TEXT);";
         db.execSQL(CREATE_PRODUCT_TABLE);
     }
 
@@ -71,6 +72,7 @@ public class ProductDB extends SQLiteOpenHelper{
         cv.put(PRODUCT_RETAIL_PRICE, products.getRetailPrice());
         cv.put(PRODUCT_OFFER_PRICE, products.getOfferPrice());
         cv.put(PRODUCT_STOCK, products.getStockInt());
+        cv.put(PRODUCT_STORE, products.getStore());
         db.insert(TABLE_PRODUCT, null, cv);
         db.close();
     }
@@ -107,10 +109,11 @@ public class ProductDB extends SQLiteOpenHelper{
         JSONProducts prod = new JSONProducts();
         prod.setId(cursor.getInt(0));
         prod.setTitle(cursor.getString(1));
-        prod.setRetailprice(cursor.getDouble(2));
-        prod.setOfferprice(cursor.getDouble(3));
+        prod.setRetailprice(cursor.getString(2));
+        prod.setOfferprice(cursor.getString(3));
         prod.setImage(cursor.getString(4));
         prod.setStock(cursor.getInt(5));
+        prod.setStore(cursor.getString(6));
         return prod;
     }
 

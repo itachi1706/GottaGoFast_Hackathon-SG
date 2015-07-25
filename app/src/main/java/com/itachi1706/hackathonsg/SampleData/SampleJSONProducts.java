@@ -16,10 +16,10 @@ public class SampleJSONProducts {
     public static void populateDatabase(ProductDB db)
     {
         ArrayList<JSONProducts> lel = new ArrayList<>();
-        lel.add(new JSONProducts(0, "Test Normal Product", 10.0, 1));
-        lel.add(new JSONProducts(1, "Test Normal Product Not Avail", 10.0, 0));
-        lel.add(new JSONProducts(2, "Test Disc Product", 10.0, 9.00, 1));
-        lel.add(new JSONProducts(3, "Test Disc Product Not Avail", 10.0, 9.00, 0));
+        lel.add(new JSONProducts(0, "Test Normal Product", "$10.0", 1, "Sonic Pls"));
+        lel.add(new JSONProducts(1, "Test Normal Product Not Avail", "$10.0", 0, "Blk 22"));
+        lel.add(new JSONProducts(2, "Test Disc Product", "$10.0", "$9.00", 1, "Cheers"));
+        lel.add(new JSONProducts(3, "Test Disc Product Not Avail", "$10.0", "$9.00", 0, "KFC"));
 
 
         db.dropEverythingAndRebuild();

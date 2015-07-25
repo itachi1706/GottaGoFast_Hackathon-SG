@@ -19,8 +19,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Title"
-        android:id="@+id/tvName"
+        android:text="Store Name"
+        android:id="@+id/tvStore"
         android:layout_below="@+id/ivProduct"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
@@ -31,7 +31,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Orig Price"
         android:id="@+id/tvOPrice"
-        android:layout_below="@+id/tvName"
+        android:layout_below="@+id/tvStore"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
@@ -39,6 +39,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textStyle="bold"
+        android:textColor="@color/red_a700"
         android:text="Discounted Price"
         android:id="@+id/tvDPrice"
         android:layout_alignTop="@+id/tvOPrice"

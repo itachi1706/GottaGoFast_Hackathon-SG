@@ -24,7 +24,7 @@ public class DetailedProductDesc extends AppCompatActivity {
     private JSONProducts product;
 
     private ImageView productImage;
-    private TextView name;
+    private TextView storeName;
     private TextView orPrice;
     private TextView discPrice;
     private TextView availability;
@@ -42,7 +42,7 @@ public class DetailedProductDesc extends AppCompatActivity {
 
 
         productImage = (ImageView) findViewById(R.id.ivProduct);
-        name = (TextView) findViewById(R.id.tvName);
+        storeName = (TextView) findViewById(R.id.tvStore);
         orPrice = (TextView) findViewById(R.id.tvOPrice);
         discPrice = (TextView) findViewById(R.id.tvDPrice);
         availability = (TextView) findViewById(R.id.tvAvail);
@@ -95,20 +95,26 @@ public class DetailedProductDesc extends AppCompatActivity {
 
         //Populate
 
+        //Store Name
+        //noinspection ConstantConditions
+        this.getSupportActionBar().setTitle(i.getTitle());
+
         //ivProduct
         //TODO AsyncTask get image and store it to product
 
-        //tvName
-        name.setText(i.getTitle());
+        //tvStore
+        storeName.setText(i.getStore());
 
         //tvOPrice
-        orPrice.setText("SG$" + df.format(i.getRetailPrice()));
+        //orPrice.setText("SG$" + df.format(i.getRetailPrice()));
+        orPrice.setText("SG" + i.getRetailPrice());
 
         //tvDPrice
         //Check if there's a disc price
-        if (i.getOfferPrice() != 0)
+        if (i.getOfferPrice() != null && !i.getOfferPrice().equals(""))
         {
-            discPrice.setText("SG$" + df.format(i.getOfferPrice()));
+            //discPrice.setText("SG$" + df.format(i.getOfferPrice()));
+            discPrice.setText("SG" + i.getOfferPrice());
             discPrice.setVisibility(View.VISIBLE);
             orPrice.setPaintFlags(orPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         }

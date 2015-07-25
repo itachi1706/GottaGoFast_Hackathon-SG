@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Product Name"
-        android:id="@+id/tvName"
+        android:id="@+id/tvStore"
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@+id/ivProducts"
         android:layout_toEndOf="@+id/ivProducts"

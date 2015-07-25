@@ -8,35 +8,40 @@ public class JSONProducts {
 
     public int id;
     public String title;
-    public double retailprice,offerprice;
+    public String retailprice,offerprice;
     public String image;
+    public String store;
     public int stock;
 
     public JSONProducts(){}
 
-    public JSONProducts(int id, String title, double retailprice, double offerprice, String image, int stock) {
+    public JSONProducts(int id, String title, String retailprice, String offerprice, String image, int stock, String store) {
         this.id = id;
         this.title = title;
         this.retailprice = retailprice;
         this.offerprice = offerprice;
         this.image = image;
         this.stock = stock;
+        this.store = store;
+
     }
 
-    public JSONProducts(int id, String title, double retailprice, double offerprice, int stock) {
+    public JSONProducts(int id, String title, String retailprice, String offerprice, int stock, String store) {
         this.id = id;
         this.title = title;
         this.retailprice = retailprice;
         this.offerprice = offerprice;
         this.stock = stock;
+        this.store = store;
     }
 
-    public JSONProducts(int id, String title, double retailprice, int stock) {
+    public JSONProducts(int id, String title, String retailprice, int stock, String store) {
         this.id = id;
         this.title = title;
         this.retailprice = retailprice;
         this.stock = stock;
-        this.offerprice = 0;
+        this.offerprice = "";
+        this.store = store;
     }
 
     public int getID(){
@@ -47,11 +52,11 @@ public class JSONProducts {
         return this.title;
     }
 
-    public double getRetailPrice(){
+    public String getRetailPrice(){
         return this.retailprice;
     }
 
-    public double getOfferPrice(){
+    public String getOfferPrice(){
         return this.offerprice;
     }
 
@@ -71,11 +76,11 @@ public class JSONProducts {
         this.title = title;
     }
 
-    public void setRetailprice(double retailprice) {
+    public void setRetailprice(String retailprice) {
         this.retailprice = retailprice;
     }
 
-    public void setOfferprice(double offerprice) {
+    public void setOfferprice(String offerprice) {
         this.offerprice = offerprice;
     }
 
@@ -90,5 +95,13 @@ public class JSONProducts {
     public void setId(int id) {
 
         this.id = id;
+    }
+
+    public String getStore() {
+        return store;
+    }
+
+    public void setStore(String store) {
+        this.store = store;
     }
 }
