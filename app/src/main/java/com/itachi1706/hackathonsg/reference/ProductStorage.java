@@ -67,7 +67,7 @@ public class ProductStorage {
     }
 
     private static JSONArray getExistingJSONString(SharedPreferences pref) {
-        String json = pref.getString("stored", null);
+        String json = pref.getString("storedPurchases", null);
         if (json == null) {
             return new JSONArray();
         }
@@ -106,14 +106,14 @@ public class ProductStorage {
 
     public static boolean hasStorageData(SharedPreferences preferences)
     {
-        String check = preferences.getString("stored", "wot");
+        String check = preferences.getString("storedPurchases", "wot");
 
         return !check.equals("wot");
     }
 
     public static boolean hasInserted(SharedPreferences preferences, JSONProducts prods)
     {
-        String check = preferences.getString("stored", "wot");
+        String check = preferences.getString("storedPurchases", "wot");
 
         if (check.equals("wot")) return false;
 
@@ -132,7 +132,7 @@ public class ProductStorage {
 
     public static void markPurchased(SharedPreferences preferences, JSONStoredProducts product)
     {
-        String check = preferences.getString("stored", "wot");
+        String check = preferences.getString("storedPurchases", "wot");
 
         if (check.equals("wot")) return;
 
@@ -156,7 +156,7 @@ public class ProductStorage {
 
     public static void removeFromCart(SharedPreferences preferences, JSONStoredProducts product)
     {
-        String check = preferences.getString("stored", "wot");
+        String check = preferences.getString("storedPurchases", "wot");
 
         if (check.equals("wot")) return;
 
@@ -179,7 +179,7 @@ public class ProductStorage {
 
     public static JSONStoredProducts getProduct(SharedPreferences preferences, JSONProducts product)
     {
-        String check = preferences.getString("stored", "wot");
+        String check = preferences.getString("storedPurchases", "wot");
 
         if (check.equals("wot")) return null;
 

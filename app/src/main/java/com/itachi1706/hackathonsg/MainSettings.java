@@ -82,11 +82,11 @@ public class MainSettings extends AppCompatActivity {
             Preference prefs = findPreference("view_sdk_version");
             prefs.setSummary(android.os.Build.VERSION.RELEASE);
 
-            Preference favJson = findPreference("fav_json");
+            Preference favJson = findPreference("storedPurchases");
             favJson.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    String json = sp.getString("stored", "No Cart JSON");
+                    String json = sp.getString("storedPurchases", "No Cart JSON");
                     new AlertDialog.Builder(getActivity()).setMessage(json).setTitle("Cart JSON String")
                             .setPositiveButton("Close", null).show();
                     return true;

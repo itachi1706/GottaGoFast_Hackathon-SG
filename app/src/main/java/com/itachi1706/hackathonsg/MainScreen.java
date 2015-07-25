@@ -14,15 +14,18 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.google.gson.Gson;
 import com.itachi1706.hackathonsg.Database.ProductDB;
 import com.itachi1706.hackathonsg.ListViewAdapters.StoredProductViewAdapter;
 import com.itachi1706.hackathonsg.Objects.Barcode;
+import com.itachi1706.hackathonsg.Objects.JSONGeneralStoredProducts;
 import com.itachi1706.hackathonsg.Objects.JSONStoredProducts;
 import com.itachi1706.hackathonsg.libraries.barcode.IntentIntegrator;
 import com.itachi1706.hackathonsg.libraries.barcode.IntentResult;
 import com.itachi1706.hackathonsg.reference.ProductStorage;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class MainScreen extends AppCompatActivity {
 
@@ -66,6 +69,15 @@ public class MainScreen extends AppCompatActivity {
         else
         {
             cart.setAdapter(adapter);
+
+            String json = sp.getString("storedPurchases", "{\"d\":null}");
+            //Populate adapter
+            Gson gson = new Gson();
+            JSONStoredProducts[] prodTmp = gson.fromJson(json, JSONGeneralStoredProducts.class).getStorage();
+            ArrayList<JSONStoredProducts> prod = new ArrayList<>(Arrays.asList(prodTmp));
+
+            adapter.updateAdapter(prod);
+            adapter.notifyDataSetChanged();
         }
 
 
