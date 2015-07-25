@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="fill_parent"
+    android:layout_height="55dp"
+    android:descendantFocusability="blocksDescendants"
+    android:padding="2dip">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Product Name"
+        android:id="@+id/tvStore"
+        android:singleLine="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="$0.00      "
+        android:id="@+id/tvOriginalPrice"
+        android:numeric="decimal"
+        android:layout_below="@+id/tvStore"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Stock Availabiltiy"
+        android:id="@+id/tvAvailability"
+        android:layout_alignBottom="@+id/tvDiscountedPrice"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="$0.00"
+        android:id="@+id/tvDiscountedPrice"
+        android:numeric="decimal"
+        android:textStyle="bold"
+        android:textColor="@color/red_a700"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:layout_alignTop="@+id/tvOriginalPrice"
+        android:layout_toRightOf="@+id/tvOriginalPrice"
+        android:layout_toEndOf="@+id/tvOriginalPrice" />
+</RelativeLayout>

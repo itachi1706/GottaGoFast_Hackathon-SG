@@ -2,7 +2,9 @@ package com.itachi1706.hackathonsg;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -15,6 +17,7 @@ import android.widget.ListView;
 import com.itachi1706.hackathonsg.AsyncTasks.PopulateDatabase;
 import com.itachi1706.hackathonsg.Database.ProductDB;
 import com.itachi1706.hackathonsg.ListViewAdapters.ProductViewAdapter;
+import com.itachi1706.hackathonsg.ListViewAdapters.ProductViewCompactAdapter;
 import com.itachi1706.hackathonsg.Objects.JSONProducts;
 import com.itachi1706.hackathonsg.SampleData.SampleJSONProducts;
 
@@ -26,6 +29,8 @@ public class ProductList extends AppCompatActivity implements SwipeRefreshLayout
 
     ListView productView;
     public static ProductViewAdapter adapter;
+    public static ProductViewCompactAdapter adapterCompact;
+    public static boolean isCompact;
     SwipeRefreshLayout swipeRefreshLayout;
 
     public static ArrayList<JSONProducts> productList;
@@ -37,8 +42,22 @@ public class ProductList extends AppCompatActivity implements SwipeRefreshLayout
 
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_with_real_data);
         productView = (ListView) findViewById(R.id.lvProducts);
+
         adapter = new ProductViewAdapter(this, R.layout.listview_products, new ArrayList<JSONProducts>());
-        productView.setAdapter(adapter);
+        adapterCompact = new ProductViewCompactAdapter(this, R.layout.listview_products_compact, new ArrayList<JSONProducts>());
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        if (!sp.getBoolean("compactList", false))
+        {
+            productView.setAdapter(adapter);
+            isCompact = false;
+        }
+        else
+        {
+            productView.setAdapter(adapterCompact);
+            isCompact = true;
+        }
+
 
         swipeRefreshLayout.setOnRefreshListener(this);
         // TODO Swipe to refresh get 4 colors for the color scheme
@@ -65,8 +84,15 @@ public class ProductList extends AppCompatActivity implements SwipeRefreshLayout
         productList = db.getAllProducts();
         if (productList.size() > 0)
         {
-            adapter.updateAdapter(productList);
-            adapter.notifyDataSetChanged();
+            if (!isCompact) {
+                productView.setAdapter(adapter);
+                adapter.updateAdapter(productList);
+                adapter.notifyDataSetChanged();
+            } else {
+                productView.setAdapter(adapterCompact);
+                adapterCompact.updateAdapter(productList);
+                adapterCompact.notifyDataSetChanged();
+            }
         }
     }
 
@@ -127,8 +153,13 @@ public class ProductList extends AppCompatActivity implements SwipeRefreshLayout
 
         //Update adapter
         productList = db.getAllProducts();
-        adapter.updateAdapter(productList);
-        adapter.notifyDataSetChanged();
+        if (!isCompact) {
+            adapter.updateAdapter(productList);
+            adapter.notifyDataSetChanged();
+        } else {
+            adapterCompact.updateAdapter(productList);
+            adapterCompact.notifyDataSetChanged();
+        }
         swipeRefreshLayout.setRefreshing(false);
     }
 

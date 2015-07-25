@@ -61,7 +61,12 @@ public class AddToDB extends AsyncTask<JSONGeneralProducts, String, Void> {
     protected void onPostExecute(Void param){
         dialog.dismiss();
         ProductList.productList = db.getAllProducts();
-        ProductList.adapter.updateAdapter(ProductList.productList);
-        ProductList.adapter.notifyDataSetChanged();
+        if (!ProductList.isCompact) {
+            ProductList.adapter.updateAdapter(ProductList.productList);
+            ProductList.adapter.notifyDataSetChanged();
+        } else {
+            ProductList.adapterCompact.updateAdapter(ProductList.productList);
+            ProductList.adapterCompact.notifyDataSetChanged();
+        }
     }
 }
