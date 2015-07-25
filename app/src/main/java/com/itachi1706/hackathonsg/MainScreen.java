@@ -2,25 +2,37 @@ package com.itachi1706.hackathonsg;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
+import com.itachi1706.hackathonsg.Database.ProductDB;
+import com.itachi1706.hackathonsg.ListViewAdapters.StoredProductViewAdapter;
 import com.itachi1706.hackathonsg.Objects.Barcode;
+import com.itachi1706.hackathonsg.Objects.JSONStoredProducts;
 import com.itachi1706.hackathonsg.libraries.barcode.IntentIntegrator;
 import com.itachi1706.hackathonsg.libraries.barcode.IntentResult;
+import com.itachi1706.hackathonsg.reference.ProductStorage;
+
+import java.util.ArrayList;
 
 public class MainScreen extends AppCompatActivity {
 
     private final String TAG = "MainScreen";
 
     private FloatingActionButton fab;
+    private ListView cart;
+
+    private ArrayAdapter<String> emptySet;
+    private StoredProductViewAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,8 +41,10 @@ public class MainScreen extends AppCompatActivity {
 
         //Initialize
         fab = (FloatingActionButton) findViewById(R.id.add_product_fab);
+        cart = (ListView) findViewById(R.id.lvCart);
 
-
+        emptySet = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, new String[] {"No Cart Item. Why don't you get started?"});
+        adapter = new StoredProductViewAdapter(this, R.layout.listview_products, new ArrayList<JSONStoredProducts>());
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -38,6 +52,23 @@ public class MainScreen extends AppCompatActivity {
                 startActivity(new Intent(MainScreen.this, ProductList.class));
             }
         });
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        if (!ProductStorage.hasStorageData(sp))
+        {
+            cart.setAdapter(emptySet);
+        }
+        else
+        {
+            cart.setAdapter(adapter);
+        }
+
+
     }
 
     @Override
