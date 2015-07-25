@@ -43,6 +43,29 @@ public class ProductStorage {
         }
     }
 
+    public static void addNewProduct(JSONStoredProducts product, SharedPreferences prefs)
+    {
+        int key = product.getKey();
+        boolean purchase = product.isPurchased();
+        long date = product.getDateStored();
+
+        JSONArray arr = getExistingJSONString(prefs);
+        JSONObject obj = new JSONObject();
+        JSONObject main = new JSONObject();
+
+        try
+        {
+            obj.put("key", key);
+            obj.put("isPurchased", purchase);
+            obj.put("dateStored", date);
+            arr.put(obj);
+            main.put("storage", arr);
+            prefs.edit().putString("storedPurchases", main.toString()).apply();
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
+    }
+
     private static JSONArray getExistingJSONString(SharedPreferences pref) {
         String json = pref.getString("stored", null);
         if (json == null) {
@@ -57,12 +80,24 @@ public class ProductStorage {
         return new JSONArray();
     }
 
-    public static void updateProductsList(SharedPreferences pref, ArrayList<JSONProducts> newProducts)
+    public static void updateProductsList(ArrayList<JSONProducts> newProducts, SharedPreferences pref)
     {
         pref.edit().remove("stored").apply();
         if (newProducts.size() != 0)
         {
             for (JSONProducts prod : newProducts)
+            {
+                addNewProduct(prod, pref);
+            }
+        }
+    }
+
+    public static void updateProductsList(SharedPreferences pref, ArrayList<JSONStoredProducts> newProducts)
+    {
+        pref.edit().remove("stored").apply();
+        if (newProducts.size() != 0)
+        {
+            for (JSONStoredProducts prod : newProducts)
             {
                 addNewProduct(prod, pref);
             }
@@ -113,8 +148,54 @@ public class ProductStorage {
                 prod.setIsPurchased(true);
 
                 ArrayList<JSONStoredProducts> newArray = new ArrayList<>(Arrays.asList(products));
+                updateProductsList(preferences, newArray);
                 return;
             }
         }
+    }
+
+    public static void removeFromCart(SharedPreferences preferences, JSONStoredProducts product)
+    {
+        String check = preferences.getString("stored", "wot");
+
+        if (check.equals("wot")) return;
+
+        Gson gson = new Gson();
+        JSONGeneralStoredProducts productArray = gson.fromJson(check, JSONGeneralStoredProducts.class);
+
+        JSONStoredProducts[] products = productArray.getStorage();
+        ArrayList<JSONStoredProducts> newArray = new ArrayList<>(Arrays.asList(products));
+
+        for (JSONStoredProducts prod : newArray)
+        {
+            if (prod.getKey() == product.getKey() && !prod.isPurchased())
+            {
+                newArray.remove(prod);
+                updateProductsList(preferences, newArray);
+                return;
+            }
+        }
+    }
+
+    public static JSONStoredProducts getProduct(SharedPreferences preferences, JSONProducts product)
+    {
+        String check = preferences.getString("stored", "wot");
+
+        if (check.equals("wot")) return null;
+
+        Gson gson = new Gson();
+        JSONGeneralStoredProducts productArray = gson.fromJson(check, JSONGeneralStoredProducts.class);
+
+        JSONStoredProducts[] products = productArray.getStorage();
+        ArrayList<JSONStoredProducts> newArray = new ArrayList<>(Arrays.asList(products));
+
+        for (JSONStoredProducts prod : newArray)
+        {
+            if (prod.getKey() == product.getID() && !prod.isPurchased())
+            {
+                return prod;
+            }
+        }
+        return null;
     }
 }

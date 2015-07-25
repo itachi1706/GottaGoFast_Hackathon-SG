@@ -1,8 +1,11 @@
 package com.itachi1706.hackathonsg;
 
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -10,11 +13,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.itachi1706.hackathonsg.AsyncTasks.GetProductImage;
 import com.itachi1706.hackathonsg.Database.ProductDB;
 import com.itachi1706.hackathonsg.Objects.JSONProducts;
 import com.itachi1706.hackathonsg.reference.ProductImageTemp;
+import com.itachi1706.hackathonsg.reference.ProductStorage;
 import com.itachi1706.hackathonsg.reference.StaticReferences;
 
 import java.text.DecimalFormat;
@@ -32,6 +37,8 @@ public class DetailedProductDesc extends AppCompatActivity {
     private TextView discPrice;
     private TextView availability;
 
+    private FloatingActionButton addToCart;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +49,8 @@ public class DetailedProductDesc extends AppCompatActivity {
 
         key = this.getIntent().getIntExtra("key", -1);
 
+        final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+
 
 
         productImage = (ImageView) findViewById(R.id.ivProduct);
@@ -49,6 +58,35 @@ public class DetailedProductDesc extends AppCompatActivity {
         orPrice = (TextView) findViewById(R.id.tvOPrice);
         discPrice = (TextView) findViewById(R.id.tvDPrice);
         availability = (TextView) findViewById(R.id.tvAvail);
+
+        addToCart = (FloatingActionButton) findViewById(R.id.add_cart_fab);
+        addToCart.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (ProductStorage.hasInserted(sp, product))
+                    Toast.makeText(DetailedProductDesc.this, "Remove from Cart", Toast.LENGTH_SHORT).show();
+                else
+                    Toast.makeText(DetailedProductDesc.this, "Add to Cart", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
+        addToCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (ProductStorage.hasInserted(sp, product))
+                {
+                    //Remove From Cart
+                    ProductStorage.getProduct(sp, product);
+                    Toast.makeText(DetailedProductDesc.this, "Removed " + product.getTitle() + " from Cart", Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    //Add to Cart
+                    ProductStorage.addNewProduct(product, sp);
+                    Toast.makeText(DetailedProductDesc.this, "Added " + product.getTitle() + " to Cart", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
     }
 
