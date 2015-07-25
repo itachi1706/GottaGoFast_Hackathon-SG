@@ -9,7 +9,7 @@
     <android.support.design.widget.CoordinatorLayout
         android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:layout_gravity="end|bottom"
+        android:layout_gravity="center|right"
         android:id="@+id/main_coordinator">
         <android.support.design.widget.FloatingActionButton
             android:layout_width="wrap_content"
@@ -19,7 +19,7 @@
             android:layout_marginBottom="@dimen/activity_vertical_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
-            android:layout_gravity="end|bottom"
+            android:layout_gravity="center|right"
             app:elevation="@dimen/fab_elevation"
             app:borderWidth="0dp"
             android:adjustViewBounds="false" />

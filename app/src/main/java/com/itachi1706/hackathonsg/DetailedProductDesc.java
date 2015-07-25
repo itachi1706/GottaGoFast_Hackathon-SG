@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.itachi1706.hackathonsg.AsyncTasks.GetProductImage;
 import com.itachi1706.hackathonsg.Database.ProductDB;
 import com.itachi1706.hackathonsg.ListViewAdapters.ProductViewAdapter;
+import com.itachi1706.hackathonsg.ListViewAdapters.SimilarProductViewAdapter;
 import com.itachi1706.hackathonsg.Objects.JSONProducts;
 import com.itachi1706.hackathonsg.Objects.JSONStoredProducts;
 import com.itachi1706.hackathonsg.reference.ProductImageTemp;
@@ -49,7 +50,7 @@ public class DetailedProductDesc extends AppCompatActivity {
     private FloatingActionButton addToCart;
 
     private ListView similarItems;
-    private ProductViewAdapter adapter;
+    private SimilarProductViewAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -200,7 +201,6 @@ public class DetailedProductDesc extends AppCompatActivity {
         }
 
 
-        //TODO Do the similar items shit
         ArrayAdapter<String> noSimilarAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, new String[]{"No Similar items Found"});
         ProductDB db = new ProductDB(this);
         if (i.getBarcode() != null && !i.getBarcode().equals("")) {
@@ -216,7 +216,7 @@ public class DetailedProductDesc extends AppCompatActivity {
 
 
             //Iterate through and remove the item that is similar to itself
-            adapter = new ProductViewAdapter(this, R.layout.listview_products, items);
+            adapter = new SimilarProductViewAdapter(this, R.layout.listview_products, items);
             if (items.size() == 0)
                 similarItems.setAdapter(noSimilarAdapter);
             else
