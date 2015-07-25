@@ -50,7 +50,12 @@ public class StoredProductViewAdapter extends ArrayAdapter<JSONStoredProducts>
 
         JSONStoredProducts iProd = items.get(position);
         ProductDB db = new ProductDB(context);
-        JSONProducts i = db.getJSONProductByKey(iProd.getKey());
+        JSONProducts i;
+        try {
+            i = db.getJSONProductByKey(iProd.getKey());
+        } catch (Exception e){
+            i = null;
+        }
 
         ImageView productImage = (ImageView) v.findViewById(R.id.ivProducts);
         TextView productName = (TextView) v.findViewById(R.id.tvStore);
@@ -84,7 +89,8 @@ public class StoredProductViewAdapter extends ArrayAdapter<JSONStoredProducts>
                 else
                 {
                     //Get from internet
-                    new GetProductImage(context, productImage, i.getID()).execute(i.getImage());
+                    if (!db.isEmpty())
+                        new GetProductImage(context, productImage, i.getID()).execute(i.getImage());
                 }
             }
 

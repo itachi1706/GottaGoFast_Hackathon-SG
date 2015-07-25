@@ -33,6 +33,7 @@ public class ProductDB extends SQLiteOpenHelper{
     public static final String PRODUCT_IMAGE = "image";
     public static final String PRODUCT_STOCK = "stock";
     public static final String PRODUCT_STORE = "store";
+    public static final String PRODUCT_BARCODE = "barcode";
 
     public ProductDB(Context context)
     {
@@ -44,7 +45,7 @@ public class ProductDB extends SQLiteOpenHelper{
     {
         String CREATE_PRODUCT_TABLE = "CREATE TABLE " + TABLE_PRODUCT + "(" + PRODUCT_KEY + " INTEGER PRIMARY KEY,"
                 + PRODUCT_TITLE + " TEXT," + PRODUCT_RETAIL_PRICE + " TEXT," + PRODUCT_OFFER_PRICE + " TEXT,"
-                + PRODUCT_IMAGE + " TEXT," + PRODUCT_STOCK + " INTEGER," + PRODUCT_STORE + " TEXT);";
+                + PRODUCT_IMAGE + " TEXT," + PRODUCT_STOCK + " INTEGER," + PRODUCT_STORE + " TEXT," + PRODUCT_BARCODE + " TEXT);";
         db.execSQL(CREATE_PRODUCT_TABLE);
     }
 
@@ -73,6 +74,7 @@ public class ProductDB extends SQLiteOpenHelper{
         cv.put(PRODUCT_OFFER_PRICE, products.getOfferPrice());
         cv.put(PRODUCT_STOCK, products.getStockInt());
         cv.put(PRODUCT_STORE, products.getStore());
+        cv.put(PRODUCT_BARCODE, products.getBarcode());
         db.insert(TABLE_PRODUCT, null, cv);
         db.close();
     }
@@ -88,6 +90,7 @@ public class ProductDB extends SQLiteOpenHelper{
         cv.put(PRODUCT_OFFER_PRICE, products.getOfferPrice());
         cv.put(PRODUCT_STOCK, products.getStockInt());
         cv.put(PRODUCT_STORE, products.getStore());
+        cv.put(PRODUCT_BARCODE, products.getBarcode());
         db.update(TABLE_PRODUCT, cv, filter, null);
         db.close();
     }
@@ -131,6 +134,7 @@ public class ProductDB extends SQLiteOpenHelper{
         prod.setImage(cursor.getString(4));
         prod.setStock(cursor.getInt(5));
         prod.setStore(cursor.getString(6));
+        prod.setBarcode(cursor.getString(7));
         return prod;
     }
 
@@ -210,6 +214,44 @@ public class ProductDB extends SQLiteOpenHelper{
         db.close();
 
         return results;
+    }
+
+    /**
+     * Get All products by the barcode
+     * @param barcode barcode of product
+     * @return list of products with the same barcode
+     */
+    public ArrayList<JSONProducts> getAllProductsByBarcode(String barcode)
+    {
+        String query = "SELECT * FROM " + TABLE_PRODUCT + " WHERE " + PRODUCT_BARCODE + "=" + barcode + ";";
+        SQLiteDatabase db = this.getReadableDatabase();
+        ArrayList<JSONProducts> results = new ArrayList<>();
+
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst())
+        {
+            do
+            {
+                JSONProducts prod = generateProductFromCursor(cursor);
+                results.add(prod);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+
+        return results;
+    }
+
+    public boolean isEmpty()
+    {
+        String query = "SELECT * FROM " + TABLE_PRODUCT;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        int count = cursor.getCount();
+        cursor.close();
+        db.close();
+        return count == 0;
     }
 
 

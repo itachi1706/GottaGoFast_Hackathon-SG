@@ -12,6 +12,7 @@ public class JSONProducts {
     public String image;
     public String store;
     public int stock;
+    public String barcode;
 
     public JSONProducts(){}
 
@@ -103,5 +104,14 @@ public class JSONProducts {
 
     public void setStore(String store) {
         this.store = store;
+    }
+
+
+    public String getBarcode() {
+        return barcode;
+    }
+
+    public void setBarcode(String barcode) {
+        this.barcode = barcode;
     }
 }
