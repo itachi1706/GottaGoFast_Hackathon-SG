@@ -6,6 +6,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 
+import com.itachi1706.hackathonsg.Database.ProductDB;
 import com.itachi1706.hackathonsg.ListViewAdapters.ProductViewAdapter;
 import com.itachi1706.hackathonsg.Objects.JSONProducts;
 import com.itachi1706.hackathonsg.SampleData.SampleJSONProducts;
@@ -31,8 +32,12 @@ public class ProductList extends AppCompatActivity {
     public void onResume(){
         super.onResume();
 
+        //Drop and repopulate database
+        ProductDB db = new ProductDB(this);
+        SampleJSONProducts.populateDatabase(db);
+
         //Update adapter
-        ArrayList<JSONProducts> productList = SampleJSONProducts.getSampleData();
+        ArrayList<JSONProducts> productList = db.getAllProducts();
         adapter.updateAdapter(productList);
         adapter.notifyDataSetChanged();
     }

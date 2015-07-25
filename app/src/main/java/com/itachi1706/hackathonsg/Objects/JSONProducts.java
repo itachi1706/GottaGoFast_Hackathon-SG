@@ -12,6 +12,8 @@ public class JSONProducts {
     public String image;
     public int stock;
 
+    public JSONProducts(){}
+
     public JSONProducts(int id, String title, double retailprice, double offerprice, String image, int stock) {
         this.id = id;
         this.title = title;
