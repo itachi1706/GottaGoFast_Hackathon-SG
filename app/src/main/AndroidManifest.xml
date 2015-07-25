@@ -20,6 +20,10 @@
             android:name=".ProductList"
             android:label="@string/title_activity_populate_list" >
         </activity>
+        <activity
+            android:name=".DetailedProductDesc"
+            android:label="@string/title_activity_detailed_product_desc" >
+        </activity>
     </application>
 
 </manifest>

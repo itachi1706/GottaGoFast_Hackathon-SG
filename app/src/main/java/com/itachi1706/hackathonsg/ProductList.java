@@ -1,9 +1,13 @@
 package com.itachi1706.hackathonsg;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.itachi1706.hackathonsg.Database.ProductDB;
@@ -12,11 +16,16 @@ import com.itachi1706.hackathonsg.Objects.JSONProducts;
 import com.itachi1706.hackathonsg.SampleData.SampleJSONProducts;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class ProductList extends AppCompatActivity {
 
+    private final String KEY = "ProductList";
+
     ListView productView;
     ProductViewAdapter adapter;
+
+    ArrayList<JSONProducts> productList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +35,20 @@ public class ProductList extends AppCompatActivity {
         productView = (ListView) findViewById(R.id.lvProducts);
         adapter = new ProductViewAdapter(this, R.layout.listview_products, new ArrayList<JSONProducts>());
         productView.setAdapter(adapter);
+        //productView.setItemsCanFocus(true);
+        Log.d(KEY, productView.getItemsCanFocus() + "");
+
+        //Set on item click listener
+        productView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                JSONProducts prod = productList.get(position);
+
+                Intent descIntent = new Intent(ProductList.this, DetailedProductDesc.class);
+                descIntent.putExtra("key", prod.getID());
+                startActivity(descIntent);
+            }
+        });
     }
 
     @Override
@@ -37,7 +60,7 @@ public class ProductList extends AppCompatActivity {
         SampleJSONProducts.populateDatabase(db);
 
         //Update adapter
-        ArrayList<JSONProducts> productList = db.getAllProducts();
+        productList = db.getAllProducts();
         adapter.updateAdapter(productList);
         adapter.notifyDataSetChanged();
     }
