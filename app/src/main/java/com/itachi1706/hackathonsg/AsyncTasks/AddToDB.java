@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.itachi1706.hackathonsg.Database.ProductDB;
 import com.itachi1706.hackathonsg.Objects.JSONGeneralProducts;
@@ -21,6 +22,8 @@ public class AddToDB extends AsyncTask<JSONGeneralProducts, String, Void> {
     private Activity activity;
     private final String KEY = "ADD-TO-DB";
 
+    private int totalLen;
+
     public AddToDB(ProgressDialog dialog, ProductDB db, Activity activity)
     {
         this.dialog = dialog;
@@ -33,6 +36,7 @@ public class AddToDB extends AsyncTask<JSONGeneralProducts, String, Void> {
 
         JSONProducts[] products = array[0].getItems();
 
+        totalLen = products.length;
         for (int i = 0; i < products.length; i++)
         {
             JSONProducts prod = products[i];
@@ -68,5 +72,7 @@ public class AddToDB extends AsyncTask<JSONGeneralProducts, String, Void> {
             ProductList.adapterCompact.updateAdapter(ProductList.productList);
             ProductList.adapterCompact.notifyDataSetChanged();
         }
+
+        Toast.makeText(activity, "Updated " + totalLen + " records", Toast.LENGTH_SHORT).show();
     }
 }

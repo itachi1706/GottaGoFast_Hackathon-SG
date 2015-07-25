@@ -77,6 +77,21 @@ public class ProductDB extends SQLiteOpenHelper{
         db.close();
     }
 
+    private void updateJSON(JSONProducts products)
+    {
+        String filter = PRODUCT_KEY + "=" + products.getID();
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(PRODUCT_IMAGE, products.getImage());
+        cv.put(PRODUCT_TITLE, products.getTitle());
+        cv.put(PRODUCT_RETAIL_PRICE, products.getRetailPrice());
+        cv.put(PRODUCT_OFFER_PRICE, products.getOfferPrice());
+        cv.put(PRODUCT_STOCK, products.getStockInt());
+        cv.put(PRODUCT_STORE, products.getStore());
+        db.update(TABLE_PRODUCT, cv, filter, null);
+        db.close();
+    }
+
     public boolean checkIfExistAlready(JSONProducts products)
     {
         int key = products.getID();
@@ -95,7 +110,9 @@ public class ProductDB extends SQLiteOpenHelper{
      */
     public void addToDB(JSONProducts products)
     {
-        if (checkIfExistAlready(products)) return;
+        if (checkIfExistAlready(products)) {
+            updateJSON(products);
+        }
         addFromJSON(products);
     }
 
