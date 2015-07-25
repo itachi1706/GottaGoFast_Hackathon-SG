@@ -2,7 +2,6 @@ package com.itachi1706.hackathonsg.AsyncTasks;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
@@ -11,7 +10,6 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.itachi1706.hackathonsg.Database.ProductDB;
 import com.itachi1706.hackathonsg.Objects.JSONGeneralProducts;
-import com.itachi1706.hackathonsg.Objects.JSONProducts;
 import com.itachi1706.hackathonsg.reference.StaticReferences;
 
 import java.io.BufferedReader;
@@ -45,7 +43,7 @@ public class PopulateDatabase extends AsyncTask<Void, Void, String> {
     @Override
     protected String doInBackground(Void... params)
     {
-        String url = StaticReferences.BASE_URL + "listProduct.php";
+        String url = StaticReferences.BASE_URL + "listProduct.php?limit=-1";
         String tmp = "";
 
         Log.d("Populate", url);

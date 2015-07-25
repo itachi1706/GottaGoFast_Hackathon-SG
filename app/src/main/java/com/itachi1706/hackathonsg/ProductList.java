@@ -25,10 +25,10 @@ public class ProductList extends AppCompatActivity implements SwipeRefreshLayout
     private final String KEY = "ProductList";
 
     ListView productView;
-    ProductViewAdapter adapter;
+    public static ProductViewAdapter adapter;
     SwipeRefreshLayout swipeRefreshLayout;
 
-    ArrayList<JSONProducts> productList;
+    public static ArrayList<JSONProducts> productList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +39,6 @@ public class ProductList extends AppCompatActivity implements SwipeRefreshLayout
         productView = (ListView) findViewById(R.id.lvProducts);
         adapter = new ProductViewAdapter(this, R.layout.listview_products, new ArrayList<JSONProducts>());
         productView.setAdapter(adapter);
-        //productView.setItemsCanFocus(true);
-        Log.d(KEY, productView.getItemsCanFocus() + "");
 
         swipeRefreshLayout.setOnRefreshListener(this);
         // TODO Swipe to refresh get 4 colors for the color scheme
@@ -49,6 +47,7 @@ public class ProductList extends AppCompatActivity implements SwipeRefreshLayout
         productView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //JSONProducts prod = (JSONProducts) productView.getItemAtPosition(position);
                 JSONProducts prod = productList.get(position);
 
                 Intent descIntent = new Intent(ProductList.this, DetailedProductDesc.class);
@@ -61,6 +60,14 @@ public class ProductList extends AppCompatActivity implements SwipeRefreshLayout
     @Override
     public void onResume(){
         super.onResume();
+
+        ProductDB db = new ProductDB(this);
+        productList = db.getAllProducts();
+        if (productList.size() > 0)
+        {
+            adapter.updateAdapter(productList);
+            adapter.notifyDataSetChanged();
+        }
     }
 
     @Override
