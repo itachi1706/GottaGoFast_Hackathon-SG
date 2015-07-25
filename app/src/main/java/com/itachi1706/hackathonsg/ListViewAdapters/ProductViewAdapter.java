@@ -149,11 +149,11 @@ public class ProductViewAdapter extends ArrayAdapter<JSONProducts>
         return items != null? items.size():0;
     }
 
-    //@Override
-    //public JSONProducts getItem(int arg0)
-    //{
-    //    return items.get(arg0);
-    //}
+    @Override
+    public JSONProducts getItem(int arg0)
+    {
+        return items.get(arg0);
+    }
 
     public void updateAdapter(ArrayList<JSONProducts> newArrayData)
     {

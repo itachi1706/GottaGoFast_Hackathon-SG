@@ -254,5 +254,31 @@ public class ProductDB extends SQLiteOpenHelper{
         return count == 0;
     }
 
+    /**
+     * Returns a list of Products based on query string
+     * @param query Query String
+     * @return Product Object ArrayList
+     */
+    public ArrayList<JSONProducts> getProductsByQuery(String query){
+        String queryString = "SELECT * FROM " + TABLE_PRODUCT + " WHERE " + PRODUCT_TITLE + " LIKE '%" + query + "%' COLLATE NOCASE OR "
+                + PRODUCT_BARCODE + " LIKE '%" + query + "%' COLLATE NOCASE OR " + PRODUCT_KEY + " LIKE '%" + query + "%' COLLATE NOCASE;";
+        System.out.println("DB QUERY-STRING: "+ queryString);
+        SQLiteDatabase db = this.getReadableDatabase();
+        ArrayList<JSONProducts> result = new ArrayList<>();
+
+        Cursor cursor = db.rawQuery(queryString, null);
+        if (cursor.getCount() == 0)
+            return null;
+        if (cursor.moveToFirst()){
+            do {
+                JSONProducts prod = generateProductFromCursor(cursor);
+                result.add(prod);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return result;
+    }
+
 
 }

@@ -7,11 +7,14 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import com.itachi1706.hackathonsg.AsyncTasks.PopulateDatabase;
@@ -32,6 +35,7 @@ public class ProductList extends AppCompatActivity implements SwipeRefreshLayout
     public static ProductViewCompactAdapter adapterCompact;
     public static boolean isCompact;
     SwipeRefreshLayout swipeRefreshLayout;
+    EditText searchField;
 
     public static ArrayList<JSONProducts> productList;
 
@@ -42,6 +46,7 @@ public class ProductList extends AppCompatActivity implements SwipeRefreshLayout
 
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_with_real_data);
         productView = (ListView) findViewById(R.id.lvProducts);
+        searchField = (EditText) findViewById(R.id.etProductsFilter);
 
         adapter = new ProductViewAdapter(this, R.layout.listview_products, new ArrayList<JSONProducts>());
         adapterCompact = new ProductViewCompactAdapter(this, R.layout.listview_products_compact, new ArrayList<JSONProducts>());
@@ -58,6 +63,33 @@ public class ProductList extends AppCompatActivity implements SwipeRefreshLayout
             isCompact = true;
         }
 
+        TextWatcher inputWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String query = s.toString();
+                Log.d("TextWatcher", "Query: " + query);
+                ProductDB db = new ProductDB(ProductList.this);
+                ArrayList<JSONProducts> list = db.getProductsByQuery(query);
+                if (list != null){
+                    Log.d("TextWatcher", "Finished Search. Size: " + list.size());
+                    adapter.updateAdapter(list);
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        };
+
+        searchField.addTextChangedListener(inputWatcher);
+
 
         swipeRefreshLayout.setOnRefreshListener(this);
         // TODO Swipe to refresh get 4 colors for the color scheme
@@ -66,8 +98,8 @@ public class ProductList extends AppCompatActivity implements SwipeRefreshLayout
         productView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //JSONProducts prod = (JSONProducts) productView.getItemAtPosition(position);
-                JSONProducts prod = productList.get(position);
+                JSONProducts prod = (JSONProducts) productView.getItemAtPosition(position);
+                //JSONProducts prod = productList.get(position);
 
                 Intent descIntent = new Intent(ProductList.this, DetailedProductDesc.class);
                 descIntent.putExtra("key", prod.getID());

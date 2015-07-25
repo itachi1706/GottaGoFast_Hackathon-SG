@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -223,6 +224,19 @@ public class DetailedProductDesc extends AppCompatActivity {
         } else {
             similarItems.setAdapter(noSimilarAdapter);
         }
+
+        similarItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Object o = similarItems.getItemAtPosition(position);
+                if (o instanceof JSONProducts) {
+                    JSONProducts item = (JSONProducts) o;
+                    Intent descIntent = new Intent(DetailedProductDesc.this, DetailedProductDesc.class);
+                    descIntent.putExtra("key", item.getID());
+                    startActivity(descIntent);
+                }
+            }
+        });
     }
 
 
