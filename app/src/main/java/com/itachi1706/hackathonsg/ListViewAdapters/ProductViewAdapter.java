@@ -10,8 +10,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.itachi1706.hackathonsg.AsyncTasks.GetProductImage;
 import com.itachi1706.hackathonsg.Objects.JSONProducts;
+import com.itachi1706.hackathonsg.Objects.ProductImageView;
 import com.itachi1706.hackathonsg.R;
+import com.itachi1706.hackathonsg.reference.StaticReferences;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -68,7 +71,13 @@ public class ProductViewAdapter extends ArrayAdapter<JSONProducts>
         {
             if (productImage != null)
             {
-                //TODO AsyncTask get image and store it to product
+                if (StaticReferences.savedImages.containsKey(i.getID())){
+                    //Get from hashmap
+                    productImage.setImageDrawable(StaticReferences.savedImages.get(i.getID()));
+                } else {
+                    //Get from internet
+                    new GetProductImage(context, productImage, i.getID()).execute(i.getImage());
+                }
             }
 
             if (productName != null)

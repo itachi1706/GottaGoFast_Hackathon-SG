@@ -11,8 +11,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.itachi1706.hackathonsg.AsyncTasks.GetProductImage;
 import com.itachi1706.hackathonsg.Database.ProductDB;
 import com.itachi1706.hackathonsg.Objects.JSONProducts;
+import com.itachi1706.hackathonsg.Objects.ProductImageView;
+import com.itachi1706.hackathonsg.reference.StaticReferences;
 
 import java.text.DecimalFormat;
 
@@ -80,7 +83,7 @@ public class DetailedProductDesc extends AppCompatActivity {
             Log.e(KEY, "Null Pointer Generated");
         }
 
-        productImage.setImageDrawable(this.getResources().getDrawable(R.mipmap.ic_launcher));
+        //productImage.setImageDrawable(this.getResources().getDrawable(R.mipmap.ic_launcher));
 
     }
 
@@ -100,7 +103,13 @@ public class DetailedProductDesc extends AppCompatActivity {
         this.getSupportActionBar().setTitle(i.getTitle());
 
         //ivProduct
-        //TODO AsyncTask get image and store it to product
+        if (StaticReferences.savedImages.containsKey(i.getID())){
+            //Get from hashmap
+            productImage.setImageDrawable(StaticReferences.savedImages.get(i.getID()));
+        } else {
+            //Get from internet
+            new GetProductImage(this, productImage, i.getID()).execute(i.getImage());
+        }
 
         //tvStore
         storeName.setText(i.getStore());
