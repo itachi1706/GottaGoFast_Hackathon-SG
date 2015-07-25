@@ -15,6 +15,7 @@
 
     <PreferenceCategory android:title="Database Settings">
         <Preference android:key="lastQueried" android:title="Last Server Query" />
+        <Preference android:key="resetDB" android:title="Reset Database" android:summary="Drops Database (Requires another refresh)" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="App Information">

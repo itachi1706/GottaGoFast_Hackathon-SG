@@ -26,6 +26,8 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 
+import com.itachi1706.hackathonsg.Database.ProductDB;
+
 import java.util.Date;
 import java.util.List;
 
@@ -75,6 +77,18 @@ public class MainSettings extends AppCompatActivity {
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
             }
+
+            Preference resetDB = findPreference("resetDB");
+            resetDB.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    ProductDB db = new ProductDB(getActivity());
+                    db.dropEverythingAndRebuild();
+                    sp.edit().remove("lastQueried").apply();
+                    return true;
+                }
+            });
+
             Preference verPref = findPreference("view_app_version");
             verPref.setSummary(version);
             Preference pNamePref = findPreference("view_app_name");
