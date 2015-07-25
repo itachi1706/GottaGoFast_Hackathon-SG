@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.itachi1706.hackathonsg.AsyncTasks.GetProductImage;
 import com.itachi1706.hackathonsg.Database.ProductDB;
 import com.itachi1706.hackathonsg.Objects.JSONProducts;
+import com.itachi1706.hackathonsg.Objects.JSONStoredProducts;
 import com.itachi1706.hackathonsg.reference.ProductImageTemp;
 import com.itachi1706.hackathonsg.reference.ProductStorage;
 import com.itachi1706.hackathonsg.reference.StaticReferences;
@@ -82,7 +83,8 @@ public class DetailedProductDesc extends AppCompatActivity {
                 if (ProductStorage.hasInserted(sp, product))
                 {
                     //Remove From Cart
-                    ProductStorage.getProduct(sp, product);
+                    JSONStoredProducts toRemove = ProductStorage.getProduct(sp, product);
+                    ProductStorage.removeFromCart(sp, toRemove);
                     Toast.makeText(DetailedProductDesc.this, "Removed " + product.getTitle() + " from Cart", Toast.LENGTH_SHORT).show();
                 }
                 else

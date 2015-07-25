@@ -82,7 +82,7 @@ public class ProductStorage {
 
     public static void updateProductsList(ArrayList<JSONProducts> newProducts, SharedPreferences pref)
     {
-        pref.edit().remove("stored").apply();
+        pref.edit().remove("storedPurchases").apply();
         if (newProducts.size() != 0)
         {
             for (JSONProducts prod : newProducts)
@@ -94,7 +94,7 @@ public class ProductStorage {
 
     public static void updateProductsList(SharedPreferences pref, ArrayList<JSONStoredProducts> newProducts)
     {
-        pref.edit().remove("stored").apply();
+        pref.edit().remove("storedPurchases").apply();
         if (newProducts.size() != 0)
         {
             for (JSONStoredProducts prod : newProducts)
@@ -164,17 +164,18 @@ public class ProductStorage {
         JSONGeneralStoredProducts productArray = gson.fromJson(check, JSONGeneralStoredProducts.class);
 
         JSONStoredProducts[] products = productArray.getStorage();
-        ArrayList<JSONStoredProducts> newArray = new ArrayList<>(Arrays.asList(products));
+        ArrayList<JSONStoredProducts> oldArray = new ArrayList<>(Arrays.asList(products));
+        ArrayList<JSONStoredProducts> newArray = new ArrayList<>();
 
-        for (JSONStoredProducts prod : newArray)
+        for (JSONStoredProducts prod : oldArray)
         {
-            if (prod.getKey() == product.getKey() && !prod.isPurchased())
+            if (!(prod.getKey() == product.getKey() && !prod.isPurchased()))
             {
-                newArray.remove(prod);
-                updateProductsList(preferences, newArray);
-                return;
+                newArray.add(prod);
             }
         }
+
+        updateProductsList(preferences, newArray);
     }
 
     public static JSONStoredProducts getProduct(SharedPreferences preferences, JSONProducts product)
