@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.itachi1706.hackathonsg.Objects.JSONProducts;
 import com.itachi1706.hackathonsg.R;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 /**
@@ -50,6 +51,8 @@ public class ProductViewAdapter extends ArrayAdapter<JSONProducts>
         TextView productDiscPrice = (TextView) v.findViewById(R.id.tvDiscountedPrice);
         TextView productAvailbility = (TextView) v.findViewById(R.id.tvAvailability);
 
+        DecimalFormat df = new DecimalFormat("0.00");
+
         //Set invisible disc price
         if (productDiscPrice != null)
         {
@@ -75,7 +78,7 @@ public class ProductViewAdapter extends ArrayAdapter<JSONProducts>
 
             if (productOrigPrice != null)
             {
-                productOrigPrice.setText("SG$" + i.getRetailPrice());
+                productOrigPrice.setText("SG$" + df.format(i.getRetailPrice()));
             }
 
             if (productDiscPrice != null) {
@@ -83,7 +86,7 @@ public class ProductViewAdapter extends ArrayAdapter<JSONProducts>
                 //Check if there's a disc price
                 if (i.getOfferPrice() != 0)
                 {
-                    productDiscPrice.setText("SG$" + i.getOfferPrice());
+                    productDiscPrice.setText("SG$" + df.format(i.getOfferPrice()));
                     productDiscPrice.setVisibility(View.VISIBLE);
                     if (productOrigPrice != null)
                     {
