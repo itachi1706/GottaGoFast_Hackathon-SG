@@ -11,7 +11,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +41,8 @@ public class DetailedProductDesc extends AppCompatActivity {
 
     private FloatingActionButton addToCart;
 
+    private ListView similarItems;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +56,7 @@ public class DetailedProductDesc extends AppCompatActivity {
         final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
 
 
+        similarItems = (ListView) findViewById(R.id.lvSimilar);
 
         productImage = (ImageView) findViewById(R.id.ivProduct);
         storeName = (TextView) findViewById(R.id.tvStore);
@@ -122,7 +127,8 @@ public class DetailedProductDesc extends AppCompatActivity {
         }
 
         //productImage.setImageDrawable(this.getResources().getDrawable(R.mipmap.ic_launcher));
-
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, new String[]{"No Similar items Found"});
+        similarItems.setAdapter(adapter);
     }
 
 
@@ -183,6 +189,12 @@ public class DetailedProductDesc extends AppCompatActivity {
             availability.setText("Temporarily out of stock");
             availability.setTextColor(Color.RED);
         }
+
+
+        //TODO Do the similar items shit
+        ArrayAdapter<String> noSimilarAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, new String[]{"No Similar items Found"});
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, new String[]{"TODO Coming Soon"});
+        similarItems.setAdapter(adapter);
     }
 
 
