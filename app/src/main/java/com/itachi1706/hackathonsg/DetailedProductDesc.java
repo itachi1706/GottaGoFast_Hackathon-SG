@@ -1,5 +1,6 @@
 package com.itachi1706.hackathonsg;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -217,6 +218,7 @@ public class DetailedProductDesc extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            startActivity(new Intent(this, MainSettings.class));
             return true;
         }
 

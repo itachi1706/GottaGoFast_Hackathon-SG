@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.itachi1706.hackathonsg" >
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -25,6 +25,10 @@
         <activity
             android:name=".DetailedProductDesc"
             android:label="@string/title_activity_detailed_product_desc" >
+        </activity>
+        <activity
+            android:name=".MainSettings"
+            android:label="@string/title_activity_main_settings" >
         </activity>
     </application>
 

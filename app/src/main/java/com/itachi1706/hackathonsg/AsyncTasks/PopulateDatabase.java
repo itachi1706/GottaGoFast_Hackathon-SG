@@ -2,7 +2,9 @@ package com.itachi1706.hackathonsg.AsyncTasks;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.widget.Toast;
@@ -106,6 +108,9 @@ public class PopulateDatabase extends AsyncTask<Void, Void, String> {
             }
 
             if (swipeRefreshLayout.isRefreshing()) swipeRefreshLayout.setRefreshing(false);
+
+            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(activity);
+            sp.edit().putLong("lastQueried", System.currentTimeMillis()).apply();
 
             new AddToDB(dialog, db, activity).execute(prodArr);
         }

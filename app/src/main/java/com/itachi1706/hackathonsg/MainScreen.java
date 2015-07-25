@@ -56,6 +56,7 @@ public class MainScreen extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            startActivity(new Intent(this, MainSettings.class));
             return true;
         } else if (id == R.id.action_view_all_products) {
             startActivity(new Intent(this, ProductList.class));

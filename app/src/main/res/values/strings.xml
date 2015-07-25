@@ -5,4 +5,6 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_populate_list">View All Products</string>
     <string name="title_activity_detailed_product_desc">DetailedProductDesc</string>
+    <string name="pref_summary_pebble_background_svc">Enables background service so that you do not need to have this app open when you use the pebble application. (Note: This might have an impact on your battery life)</string>
+    <string name="title_activity_main_settings">Settings</string>
 </resources>

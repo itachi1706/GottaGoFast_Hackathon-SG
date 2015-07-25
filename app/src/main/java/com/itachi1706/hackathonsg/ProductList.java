@@ -86,6 +86,7 @@ public class ProductList extends AppCompatActivity implements SwipeRefreshLayout
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            startActivity(new Intent(this, MainSettings.class));
             return true;
         }
         else if (id == R.id.action_populate_actual)

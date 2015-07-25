@@ -1,0 +1,30 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="General Settings">
+        <CheckBoxPreference
+            android:title="Compact Products List"
+            android:defaultValue="true"
+            android:key="compactList"
+            android:summary="Whether to compact the product view" />
+        <CheckBoxPreference
+            android:title="Enable Pebble Background Service"
+            android:defaultValue="true"
+            android:key="pebbleSvc"
+            android:summary="@string/pref_summary_pebble_background_svc" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Database Settings">
+        <Preference android:key="lastQueried" android:title="Last Server Query" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="App Information">
+        <Preference android:title="App Version" android:key="view_app_version" android:summary="NULL" />
+        <Preference android:title="Package Name" android:key="view_app_name" android:selectable="false" />
+        <Preference android:summary="None" android:title="Android Version" android:key="view_sdk_version" android:selectable="false"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Developer Settings (Advanced)">
+        <Preference android:title="Cart JSON" android:key="fav_json" android:summary="View JSON String for your cart" />
+    </PreferenceCategory>
+
+</PreferenceScreen>
