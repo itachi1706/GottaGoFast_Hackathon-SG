@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.itachi1706.hackathonsg.AsyncTasks.GetProductImage;
 import com.itachi1706.hackathonsg.Database.ProductDB;
 import com.itachi1706.hackathonsg.Objects.JSONProducts;
-import com.itachi1706.hackathonsg.Objects.ProductImageView;
+import com.itachi1706.hackathonsg.reference.ProductImageTemp;
 import com.itachi1706.hackathonsg.reference.StaticReferences;
 
 import java.text.DecimalFormat;
@@ -103,10 +103,14 @@ public class DetailedProductDesc extends AppCompatActivity {
         this.getSupportActionBar().setTitle(i.getTitle());
 
         //ivProduct
-        if (StaticReferences.savedImages.containsKey(i.getID())){
-            //Get from hashmap
-            productImage.setImageDrawable(StaticReferences.savedImages.get(i.getID()));
-        } else {
+        if (ProductImageTemp.checkIfProductExists(this, i.getID()))
+        {
+            //Get from storage
+            productImage.setImageDrawable(ProductImageTemp.getProduct(this, i.getID()));
+            Log.d("PRODUCT RETRIEVAL", "Retrieved " + i.getID() + "'s product from device");
+        }
+        else
+        {
             //Get from internet
             new GetProductImage(this, productImage, i.getID()).execute(i.getImage());
         }

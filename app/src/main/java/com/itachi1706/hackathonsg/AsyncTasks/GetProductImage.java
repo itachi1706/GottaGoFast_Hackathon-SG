@@ -8,6 +8,7 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.itachi1706.hackathonsg.reference.ProductImageTemp;
 import com.itachi1706.hackathonsg.reference.StaticReferences;
 
 import java.io.IOException;
@@ -74,7 +75,8 @@ public class GetProductImage extends AsyncTask<String, Void, Drawable> {
         else
         {
             image.setImageDrawable(draw);
-            StaticReferences.savedImages.put(productKey, draw);
+            ProductImageTemp.saveImage(activity, draw, productKey);
+            //StaticReferences.savedImages.put(productKey, draw);
         }
     }
 }

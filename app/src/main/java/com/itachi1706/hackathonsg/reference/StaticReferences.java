@@ -15,7 +15,4 @@ public class StaticReferences {
      */
     public static final String BASE_URL = "http://172.20.201.58/ayyy/";
     public static final int HTTP_QUERY_TIMEOUT = 30000;
-
-
-    public static HashMap<Integer, Drawable> savedImages = new HashMap<>();
 }

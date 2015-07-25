@@ -3,6 +3,7 @@ package com.itachi1706.hackathonsg.ListViewAdapters;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +13,8 @@ import android.widget.TextView;
 
 import com.itachi1706.hackathonsg.AsyncTasks.GetProductImage;
 import com.itachi1706.hackathonsg.Objects.JSONProducts;
-import com.itachi1706.hackathonsg.Objects.ProductImageView;
 import com.itachi1706.hackathonsg.R;
-import com.itachi1706.hackathonsg.reference.StaticReferences;
+import com.itachi1706.hackathonsg.reference.ProductImageTemp;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -71,6 +71,21 @@ public class ProductViewAdapter extends ArrayAdapter<JSONProducts>
         {
             if (productImage != null)
             {
+                if (ProductImageTemp.checkIfProductExists(context, i.getID()))
+                {
+                    //Get from storage
+                    productImage.setImageDrawable(ProductImageTemp.getProduct(context, i.getID()));
+                    Log.d("PRODUCT RETRIEVAL", "Retrieved " + i.getID() + "'s product from device");
+                }
+                else
+                {
+                    //Get from internet
+                    new GetProductImage(context, productImage, i.getID()).execute(i.getImage());
+                }
+                /**
+                 * Deprecrated to too high memory usage
+                 */
+                /*
                 if (StaticReferences.savedImages.containsKey(i.getID())){
                     //Get from hashmap
                     productImage.setImageDrawable(StaticReferences.savedImages.get(i.getID()));
@@ -78,6 +93,7 @@ public class ProductViewAdapter extends ArrayAdapter<JSONProducts>
                     //Get from internet
                     new GetProductImage(context, productImage, i.getID()).execute(i.getImage());
                 }
+                */
             }
 
             if (productName != null)

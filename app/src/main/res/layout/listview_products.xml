@@ -24,10 +24,10 @@
         android:text="Product Name"
         android:id="@+id/tvStore"
         android:singleLine="true"
-        android:layout_above="@+id/tvOriginalPrice"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:layout_alignTop="@+id/ivProducts"
         android:layout_alignLeft="@+id/tvOriginalPrice"
-        android:layout_alignStart="@+id/tvOriginalPrice"
-        android:paddingLeft="@dimen/activity_horizontal_margin" />
+        android:layout_alignStart="@+id/tvOriginalPrice" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -35,11 +35,11 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="$0.00      "
         android:id="@+id/tvOriginalPrice"
-        android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/ivProducts"
-        android:layout_toEndOf="@+id/ivProducts"
         android:numeric="decimal"
-        android:paddingLeft="@dimen/activity_horizontal_margin" />
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:layout_above="@+id/tvDiscountedPrice"
+        android:layout_toRightOf="@+id/ivProducts"
+        android:layout_toEndOf="@+id/ivProducts" />
 
     <TextView
         android:layout_width="wrap_content"
