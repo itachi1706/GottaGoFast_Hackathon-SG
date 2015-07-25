@@ -1,5 +1,6 @@
 package com.itachi1706.hackathonsg;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -19,8 +20,6 @@ public class MainScreen extends AppCompatActivity {
 
     private final String TAG = "MainScreen";
 
-    private Button scanBtn;
-    private TextView resultView;
     private FloatingActionButton fab;
 
     @Override
@@ -29,20 +28,10 @@ public class MainScreen extends AppCompatActivity {
         setContentView(R.layout.activity_main_screen);
 
         //Initialize
-        scanBtn = (Button) findViewById(R.id.btnScan);
-        resultView = (TextView) findViewById(R.id.tvResults);
         fab = (FloatingActionButton) findViewById(R.id.add_product_fab);
 
 
 
-        //On Click Listeners
-        scanBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                IntentIntegrator intentIntegrator = new IntentIntegrator(MainScreen.this);
-                intentIntegrator.initiateScan();
-            }
-        });
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,6 +60,9 @@ public class MainScreen extends AppCompatActivity {
         } else if (id == R.id.action_view_all_products) {
             startActivity(new Intent(this, ProductList.class));
             return true;
+        } else if (id == R.id.action_scan) {
+            IntentIntegrator intentIntegrator = new IntentIntegrator(MainScreen.this);
+            intentIntegrator.initiateScan();
         }
 
         return super.onOptionsItemSelected(item);
@@ -99,6 +91,9 @@ public class MainScreen extends AppCompatActivity {
      * @param barcode the barcode object
      */
     public void processBarCode(Barcode barcode){
-        resultView.setText(barcode.toString());
+        new AlertDialog.Builder(this).setTitle("Barcode Found!")
+                .setMessage(barcode.toString())
+                .setPositiveButton("Close", null)
+                .show();
     }
 }

@@ -5,4 +5,6 @@
         android:orderInCategory="100" app:showAsAction="never" />
     <item android:id="@+id/action_view_all_products" android:title="View All Products"
         android:orderInCategory="99" app:showAsAction="never" />
+    <item android:id="@+id/action_scan" android:title="Scan" android:icon="@drawable/barcode_white_48"
+        android:orderInCategory="100" app:showAsAction="ifRoom" />
 </menu>
