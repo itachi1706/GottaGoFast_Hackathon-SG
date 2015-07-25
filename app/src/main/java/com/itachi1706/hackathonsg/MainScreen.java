@@ -1,6 +1,7 @@
 package com.itachi1706.hackathonsg;
 
 import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,6 +21,7 @@ public class MainScreen extends AppCompatActivity {
 
     private Button scanBtn;
     private TextView resultView;
+    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +31,7 @@ public class MainScreen extends AppCompatActivity {
         //Initialize
         scanBtn = (Button) findViewById(R.id.btnScan);
         resultView = (TextView) findViewById(R.id.tvResults);
+        fab = (FloatingActionButton) findViewById(R.id.add_product_fab);
 
 
 
@@ -38,6 +41,12 @@ public class MainScreen extends AppCompatActivity {
             public void onClick(View v) {
                 IntentIntegrator intentIntegrator = new IntentIntegrator(MainScreen.this);
                 intentIntegrator.initiateScan();
+            }
+        });
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainScreen.this, ProductList.class));
             }
         });
     }
