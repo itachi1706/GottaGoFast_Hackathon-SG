@@ -1,6 +1,7 @@
 package com.itachi1706.hackathonsg;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -11,14 +12,17 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.itachi1706.hackathonsg.Database.ProductDB;
 import com.itachi1706.hackathonsg.ListViewAdapters.StoredProductViewAdapter;
 import com.itachi1706.hackathonsg.Objects.Barcode;
 import com.itachi1706.hackathonsg.Objects.JSONGeneralStoredProducts;
+import com.itachi1706.hackathonsg.Objects.JSONProducts;
 import com.itachi1706.hackathonsg.Objects.JSONStoredProducts;
 import com.itachi1706.hackathonsg.libraries.barcode.IntentIntegrator;
 import com.itachi1706.hackathonsg.libraries.barcode.IntentResult;
@@ -55,6 +59,64 @@ public class MainScreen extends AppCompatActivity {
                 startActivity(new Intent(MainScreen.this, ProductList.class));
             }
         });
+
+        cart.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Object o = cart.getItemAtPosition(position);
+                if (o instanceof JSONStoredProducts) {
+                    final JSONStoredProducts item = (JSONStoredProducts) o;
+                    ProductDB db = new ProductDB(MainScreen.this);
+                    final JSONProducts p = db.getJSONProductByKey(item.getKey());
+
+                    if (p != null) {
+                        if (item.isPurchased())
+                        {
+                            new AlertDialog.Builder(MainScreen.this).setTitle("Already Purchased")
+                                    .setMessage("You have already purchased this item")
+                                    .setNeutralButton("View", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            Intent descIntent = new Intent(MainScreen.this, DetailedProductDesc.class);
+                                            descIntent.putExtra("key", item.getKey());
+                                            startActivity(descIntent);
+                                        }
+                                    }).setPositiveButton("Close", null).show();
+                        } else
+                        {
+                            new AlertDialog.Builder(MainScreen.this).setTitle(p.getTitle())
+                                    .setMessage("What do you want to do with it? (Click outside the box to cancel)")
+                                    .setNegativeButton("Purchased", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            ProductStorage.markPurchased(PreferenceManager.getDefaultSharedPreferences(MainScreen.this), item);
+                                            updateList(PreferenceManager.getDefaultSharedPreferences(MainScreen.this));
+                                        }
+                                    })
+                                    .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            ProductStorage.removeFromCart(PreferenceManager.getDefaultSharedPreferences(MainScreen.this), item);
+                                            Toast.makeText(MainScreen.this, "Removed " + p.getTitle() + " from Cart", Toast.LENGTH_SHORT).show();
+                                        }
+                                    })
+                                    .setNeutralButton("View", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            Intent descIntent = new Intent(MainScreen.this, DetailedProductDesc.class);
+                                            descIntent.putExtra("key", item.getKey());
+                                            startActivity(descIntent);
+                                        }
+                                    }).show();
+                        }
+                    } else {
+                        new AlertDialog.Builder(MainScreen.this).setTitle("Error")
+                                .setMessage("Unable to retrive product data. Please rebuild the database in the application settings and try again")
+                                .setPositiveButton("Close", null).show();
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -70,17 +132,21 @@ public class MainScreen extends AppCompatActivity {
         {
             cart.setAdapter(adapter);
 
-            String json = sp.getString("storedPurchases", "{\"d\":null}");
-            //Populate adapter
-            Gson gson = new Gson();
-            JSONStoredProducts[] prodTmp = gson.fromJson(json, JSONGeneralStoredProducts.class).getStorage();
-            ArrayList<JSONStoredProducts> prod = new ArrayList<>(Arrays.asList(prodTmp));
-
-            adapter.updateAdapter(prod);
-            adapter.notifyDataSetChanged();
+            updateList(sp);
         }
 
+    }
 
+    private void updateList(SharedPreferences sp)
+    {
+        String json = sp.getString("storedPurchases", "{\"d\":null}");
+        //Populate adapter
+        Gson gson = new Gson();
+        JSONStoredProducts[] prodTmp = gson.fromJson(json, JSONGeneralStoredProducts.class).getStorage();
+        ArrayList<JSONStoredProducts> prod = new ArrayList<>(Arrays.asList(prodTmp));
+
+        adapter.updateAdapter(prod);
+        adapter.notifyDataSetChanged();
     }
 
     @Override

@@ -97,6 +97,8 @@ public class StoredProductViewAdapter extends ArrayAdapter<JSONStoredProducts>
             if (productName != null)
             {
                 productName.setText(i.getTitle());
+                colorTitleBasedOnPurchaseState(productName, iProd);
+
             }
 
             if (productOrigPrice != null)
@@ -147,15 +149,23 @@ public class StoredProductViewAdapter extends ArrayAdapter<JSONStoredProducts>
         return items != null? items.size():0;
     }
 
-    //@Override
-    //public JSONProducts getItem(int arg0)
-    //{
-    //    return items.get(arg0);
-    //}
+    @Override
+    public JSONStoredProducts getItem(int arg0)
+    {
+        return items.get(arg0);
+    }
 
     public void updateAdapter(ArrayList<JSONStoredProducts> newArrayData)
     {
         this.items = newArrayData;
+    }
+
+    private void colorTitleBasedOnPurchaseState(TextView view, JSONStoredProducts i)
+    {
+        if (i.isPurchased())
+            view.setTextColor(Color.GREEN);
+        else
+            view.setTextColor(Color.RED);
     }
 
 }
