@@ -1,6 +1,5 @@
 package com.itachi1706.hackathonsg.AsyncTasks;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -76,7 +75,6 @@ public class GetProductImage extends AsyncTask<String, Void, Drawable> {
         {
             image.setImageDrawable(draw);
             ProductImageTemp.saveImage(activity, draw, productKey);
-            //StaticReferences.savedImages.put(productKey, draw);
         }
     }
 }

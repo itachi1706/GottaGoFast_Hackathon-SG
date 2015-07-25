@@ -1,9 +1,5 @@
 package com.itachi1706.hackathonsg.reference;
 
-import android.graphics.drawable.Drawable;
-
-import java.util.HashMap;
-
 /**
  * Created by Kenneth on 25/7/2015
  * for Hackathon@SG in package com.itachi1706.hackathonsg.reference
