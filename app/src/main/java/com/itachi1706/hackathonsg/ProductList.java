@@ -41,6 +41,8 @@ public class ProductList extends AppCompatActivity implements SwipeRefreshLayout
     SwipeRefreshLayout swipeRefreshLayout;
     EditText searchField;
 
+    public static boolean barcodeFrom = false;
+
     public static ArrayList<JSONProducts> productList;
 
     @Override
@@ -120,20 +122,23 @@ public class ProductList extends AppCompatActivity implements SwipeRefreshLayout
     @Override
     public void onResume(){
         super.onResume();
+        if (!barcodeFrom) {
 
-        ProductDB db = new ProductDB(this);
-        productList = db.getAllProducts();
-        if (productList.size() > 0)
-        {
-            if (!isCompact) {
-                productView.setAdapter(adapter);
-                adapter.updateAdapter(productList);
-                adapter.notifyDataSetChanged();
-            } else {
-                productView.setAdapter(adapterCompact);
-                adapterCompact.updateAdapter(productList);
-                adapterCompact.notifyDataSetChanged();
+            ProductDB db = new ProductDB(this);
+            productList = db.getAllProducts();
+            if (productList.size() > 0) {
+                if (!isCompact) {
+                    productView.setAdapter(adapter);
+                    adapter.updateAdapter(productList);
+                    adapter.notifyDataSetChanged();
+                } else {
+                    productView.setAdapter(adapterCompact);
+                    adapterCompact.updateAdapter(productList);
+                    adapterCompact.notifyDataSetChanged();
+                }
             }
+        } else {
+            barcodeFrom = false;
         }
     }
 
@@ -167,6 +172,7 @@ public class ProductList extends AppCompatActivity implements SwipeRefreshLayout
             populateWithSampleData();
         } else if (id == R.id.action_scan) {
             IntentIntegrator intentIntegrator = new IntentIntegrator(ProductList.this);
+            barcodeFrom = true;
             intentIntegrator.initiateScan();
         }
 
@@ -240,5 +246,6 @@ public class ProductList extends AppCompatActivity implements SwipeRefreshLayout
         String query = barcode.getContents();
         Log.d("BarCode Search", "Query: " + query);
         manualSearch(query);
+        //barcodeFrom = false;
     }
 }
