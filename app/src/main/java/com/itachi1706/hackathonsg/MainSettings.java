@@ -27,7 +27,10 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.itachi1706.hackathonsg.Database.ProductDB;
+import com.itachi1706.hackathonsg.Objects.JSONStoredProducts;
+import com.itachi1706.hackathonsg.reference.ProductStorage;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -110,6 +113,16 @@ public class MainSettings extends AppCompatActivity {
             Preference timeDBUpdateBus = findPreference("lastQueried");
             long dbBus = sp.getLong("lastQueried", -1);
             updateSummaryDBBus(timeDBUpdateBus, dbBus);
+
+            Preference clearPref = findPreference("clearPurchases");
+            clearPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    ProductStorage.updateProductsList(sp, new ArrayList<JSONStoredProducts>());
+                    Toast.makeText(getActivity(), "Cleared Products History", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+            });
 
             verPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
