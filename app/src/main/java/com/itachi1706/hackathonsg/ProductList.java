@@ -21,6 +21,7 @@ import com.itachi1706.hackathonsg.AsyncTasks.PopulateDatabase;
 import com.itachi1706.hackathonsg.Database.ProductDB;
 import com.itachi1706.hackathonsg.ListViewAdapters.ProductViewAdapter;
 import com.itachi1706.hackathonsg.ListViewAdapters.ProductViewCompactAdapter;
+import com.itachi1706.hackathonsg.ListViewAdapters.SimilarProductViewAdapter;
 import com.itachi1706.hackathonsg.Objects.JSONProducts;
 import com.itachi1706.hackathonsg.SampleData.SampleJSONProducts;
 
@@ -31,7 +32,7 @@ public class ProductList extends AppCompatActivity implements SwipeRefreshLayout
     private final String KEY = "ProductList";
 
     ListView productView;
-    public static ProductViewAdapter adapter;
+    public static SimilarProductViewAdapter adapter;
     public static ProductViewCompactAdapter adapterCompact;
     public static boolean isCompact;
     SwipeRefreshLayout swipeRefreshLayout;
@@ -48,7 +49,7 @@ public class ProductList extends AppCompatActivity implements SwipeRefreshLayout
         productView = (ListView) findViewById(R.id.lvProducts);
         searchField = (EditText) findViewById(R.id.etProductsFilter);
 
-        adapter = new ProductViewAdapter(this, R.layout.listview_products, new ArrayList<JSONProducts>());
+        adapter = new SimilarProductViewAdapter(this, R.layout.listview_products, new ArrayList<JSONProducts>());
         adapterCompact = new ProductViewCompactAdapter(this, R.layout.listview_products_compact, new ArrayList<JSONProducts>());
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
