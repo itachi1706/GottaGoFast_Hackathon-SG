@@ -4,11 +4,11 @@
 // BEGIN AUTO-GENERATED UI CODE; DO NOT MODIFY
 static Window *s_window;
 static GBitmap *s_res_action_prev_white;
-static GBitmap *s_res_action_next_white;
 static GBitmap *s_res_action_tick_white;
+static GBitmap *s_res_action_next_white;
 static GFont s_res_gothic_24_bold;
-static GFont s_res_gothic_14;
 static GFont s_res_gothic_18_bold;
+static GFont s_res_gothic_14;
 static ActionBarLayer *s_actionbarlayer_1;
 static TextLayer *s_textlayer_title;
 static TextLayer *s_textlayer_price;
@@ -22,11 +22,11 @@ static void initialise_ui(void) {
   #endif
   
   s_res_action_prev_white = gbitmap_create_with_resource(RESOURCE_ID_ACTION_PREV_WHITE);
-  s_res_action_next_white = gbitmap_create_with_resource(RESOURCE_ID_ACTION_NEXT_WHITE);
   s_res_action_tick_white = gbitmap_create_with_resource(RESOURCE_ID_ACTION_TICK_WHITE);
+  s_res_action_next_white = gbitmap_create_with_resource(RESOURCE_ID_ACTION_NEXT_WHITE);
   s_res_gothic_24_bold = fonts_get_system_font(FONT_KEY_GOTHIC_24_BOLD);
-  s_res_gothic_14 = fonts_get_system_font(FONT_KEY_GOTHIC_14);
   s_res_gothic_18_bold = fonts_get_system_font(FONT_KEY_GOTHIC_18_BOLD);
+  s_res_gothic_14 = fonts_get_system_font(FONT_KEY_GOTHIC_14);
   // s_actionbarlayer_1
   s_actionbarlayer_1 = action_bar_layer_create();
   action_bar_layer_add_to_window(s_actionbarlayer_1, s_window);
@@ -72,13 +72,14 @@ static void destroy_ui(void) {
   text_layer_destroy(s_textlayer_avail);
   text_layer_destroy(s_textlayer_locate);
   gbitmap_destroy(s_res_action_prev_white);
-  gbitmap_destroy(s_res_action_next_white);
   gbitmap_destroy(s_res_action_tick_white);
+  gbitmap_destroy(s_res_action_next_white);
 }
 // END AUTO-GENERATED UI CODE
 
 bool debugMode = true;
 static char avail_buffer[15];
+static int current;
 
 enum {
   KEY_BUTTON_EVENT = 0,
@@ -93,6 +94,7 @@ enum {
   MESSAGE_MAX_DATA = 9,
   MESSAGE_MIN_DATA = 10,
   ERROR_NO_DATA = 11,
+  BUTTON_NEW_DATA = 12
 };
 
 /*         MESSAGE UPDATES            */
@@ -136,9 +138,11 @@ static void outbox_sent_callback(DictionaryIterator *iterator, void *context) {
 static void updateAvail(int avail){
   switch (avail){
     case 0:
-      snprintf(avail_buffer, sizeof(avail_buffer), "%s", "Available");
-    case 1:
       snprintf(avail_buffer, sizeof(avail_buffer), "%s", "Not Available");
+    text_layer_set_text(s_textlayer_avail, avail_buffer);
+    case 1:
+      snprintf(avail_buffer, sizeof(avail_buffer), "%s", "Available");
+    text_layer_set_text(s_textlayer_avail, avail_buffer);
     break;
   }
 }
@@ -154,7 +158,7 @@ static void in_received_handler(DictionaryIterator *iter, void *context){
   static char title_buffer[60];
   static char price_buffer[6];
   static int availbility;
-  static int max, current;
+  //static int max;
   static char store_buffer[10];
   static bool pgLoad = false, pgMaxLoad = false;
 
@@ -182,7 +186,7 @@ static void in_received_handler(DictionaryIterator *iter, void *context){
         updateAvail(availbility);
         break;
       case MESSAGE_MAX_DATA:
-        max = t->value->int32;
+        //max = t->value->int32;
         pgMaxLoad = true;
         break;
       case MESSAGE_MIN_DATA:
@@ -198,13 +202,81 @@ static void in_received_handler(DictionaryIterator *iter, void *context){
     //Handle paging
     static char paging_buffer[10];
     if (pgLoad && pgMaxLoad){
-      snprintf(paging_buffer, sizeof(paging_buffer), "%d/%d", current, max);
-      text_layer_set_text(textlayer_pages, paging_buffer);
+      //snprintf(paging_buffer, sizeof(paging_buffer), "%d/%d", current, max);
+      //text_layer_set_text(s_textlayer_, paging_buffer);
     }
 
     // Get next pair, if any
     t = dict_read_next(iter);
   }
+  
+}
+
+// Next or previous
+void go_next_or_prev(uint8_t key, uint8_t cmd){
+  //resetData();
+  if (debugMode)
+    APP_LOG(APP_LOG_LEVEL_INFO, "Sending data to phone");
+  DictionaryIterator *iter;
+  app_message_outbox_begin(&iter);
+      
+  Tuplet value = TupletInteger(key, cmd);
+  dict_write_tuplet(iter, &value);
+  
+  if (current != -1){
+    Tuplet page = TupletInteger(MESSAGE_MIN_DATA, current);
+    dict_write_tuplet(iter, &page);
+  }
+  
+  app_message_outbox_send();
+}
+
+// Send command
+void send_int(uint8_t key, uint8_t cmd)
+{
+  //resetData();
+  if (debugMode)
+    APP_LOG(APP_LOG_LEVEL_INFO, "Sending refresh data to phone");
+  DictionaryIterator *iter;
+  app_message_outbox_begin(&iter);
+  
+  Tuplet value = TupletInteger(key, cmd);
+  dict_write_tuplet(iter, &value);
+  
+  app_message_outbox_send();
+}
+
+/*            USER ACTIONS           */
+// When the select button is clicked
+static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
+  //if (debugMode)
+    //text_layer_set_text(textlayer_debug, "Select (Refreshes)");
+  // Tell android to refresh app
+  go_next_or_prev(KEY_BUTTON_EVENT, BUTTON_REFRESH);
+}
+
+// When the up button is clicked
+static void up_click_handler(ClickRecognizerRef recognizer, void *context) {
+  //if (debugMode)
+    //text_layer_set_text(textlayer_debug, "Up (Go Previous)");
+  // Go to previous if available
+  go_next_or_prev(KEY_BUTTON_EVENT, BUTTON_PREVIOUS);
+}
+
+// When the down button is clicked
+static void down_click_handler(ClickRecognizerRef recognizer, void *context) {
+  //if (debugMode)
+    //text_layer_set_text(textlayer_debug, "Down (Go Next)");
+  // Go to next if available
+  go_next_or_prev(KEY_BUTTON_EVENT, BUTTON_NEXT);
+}
+
+// The Button Config
+static void click_config_provider(void *context) {
+  window_single_click_subscribe(BUTTON_ID_SELECT, select_click_handler);
+  window_single_click_subscribe(BUTTON_ID_UP, up_click_handler);
+  window_single_click_subscribe(BUTTON_ID_DOWN, down_click_handler);
+}
 
 
 static void handle_window_unload(Window* window) {
@@ -213,10 +285,21 @@ static void handle_window_unload(Window* window) {
 
 void show_prodlayout(void) {
   initialise_ui();
+  action_bar_layer_set_click_config_provider(s_actionbarlayer_1, click_config_provider);
   window_set_window_handlers(s_window, (WindowHandlers) {
     .unload = handle_window_unload,
   });
   window_stack_push(s_window, true);
+  
+  //Register AppMessage events
+  app_message_register_inbox_received(in_received_handler);
+  app_message_register_inbox_dropped(inbox_dropped_callback);
+  app_message_register_outbox_failed(outbox_failed_callback);
+  app_message_register_outbox_sent(outbox_sent_callback);
+  app_message_open(app_message_inbox_size_maximum(), app_message_outbox_size_maximum());    //Large input and output buffer sizes
+  
+  //Do the initial refresh of bus data and hides debug layer
+  send_int(KEY_BUTTON_EVENT, BUTTON_NEW_DATA);
 }
 
 void hide_prodlayout(void) {
