@@ -57,7 +57,7 @@ static void initialise_ui(void) {
   layer_add_child(window_get_root_layer(s_window), (Layer *)s_textlayer_avail);
   
   // s_textlayer_locate
-  s_textlayer_locate = text_layer_create(GRect(22, 132, 100, 20));
+  s_textlayer_locate = text_layer_create(GRect(2, 132, 120, 20));
   text_layer_set_text(s_textlayer_locate, "Prod Location");
   text_layer_set_text_alignment(s_textlayer_locate, GTextAlignmentRight);
   text_layer_set_font(s_textlayer_locate, s_res_gothic_14);
