@@ -163,6 +163,8 @@ public class MainScreen extends AppCompatActivity {
                 if (!pro.isPurchased())
                     prod.add(pro);
             }
+        } else {
+            prod = new ArrayList<>(Arrays.asList(prodTmp));
         }
 
         adapter.updateAdapter(prod);
