@@ -261,7 +261,7 @@ public class DetailedProductDesc extends AppCompatActivity {
         }
 
 
-        String price = "$" + lowests;
+        String price = "$" + df.format(lowests);
         if (getPrice(i).equals(price))
             lowest.setText("(LOWEST)");
         else
