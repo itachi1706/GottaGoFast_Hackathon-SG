@@ -19,17 +19,20 @@ import android.widget.ListView;
 
 import com.itachi1706.hackathonsg.AsyncTasks.PopulateDatabase;
 import com.itachi1706.hackathonsg.Database.ProductDB;
-import com.itachi1706.hackathonsg.ListViewAdapters.ProductViewAdapter;
 import com.itachi1706.hackathonsg.ListViewAdapters.ProductViewCompactAdapter;
 import com.itachi1706.hackathonsg.ListViewAdapters.SimilarProductViewAdapter;
+import com.itachi1706.hackathonsg.Objects.Barcode;
 import com.itachi1706.hackathonsg.Objects.JSONProducts;
 import com.itachi1706.hackathonsg.SampleData.SampleJSONProducts;
+import com.itachi1706.hackathonsg.libraries.barcode.IntentIntegrator;
+import com.itachi1706.hackathonsg.libraries.barcode.IntentResult;
 
 import java.util.ArrayList;
 
 public class ProductList extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     private final String KEY = "ProductList";
+    private final String TAG = "ProductList";
 
     ListView productView;
     public static SimilarProductViewAdapter adapter;
@@ -157,6 +160,9 @@ public class ProductList extends AppCompatActivity implements SwipeRefreshLayout
         {
             swipeRefreshLayout.setRefreshing(true);
             populateWithSampleData();
+        } else if (id == R.id.action_scan) {
+            IntentIntegrator intentIntegrator = new IntentIntegrator(ProductList.this);
+            intentIntegrator.initiateScan();
         }
 
         return super.onOptionsItemSelected(item);
@@ -201,5 +207,30 @@ public class ProductList extends AppCompatActivity implements SwipeRefreshLayout
     @Override
     public void onRefresh() {
         populateWithRealData();
+    }
+
+    /**
+     * Intent Result from the Intent Integrator
+     */
+    public void onActivityResult(int requestCode, int resultCode, Intent intent){
+        Log.d(TAG, "Parsing Barcode data");
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+        if (result != null){
+            Log.d(TAG, "Found valid barcode data");
+
+            Barcode barcode = new Barcode(result.getFormatName(), result.getContents());
+            barcode.setToString(result.toString());
+            processBarCode(barcode);
+            //resultView.setText(result.toString());
+        }
+        Log.d(TAG, "Parse Completed");
+    }
+
+    /**
+     * Processes the barcode and display it onto a textview
+     * @param barcode the barcode object
+     */
+    public void processBarCode(Barcode barcode){
+        searchField.setText(barcode.getContents());
     }
 }

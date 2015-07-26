@@ -8,4 +8,6 @@
         android:orderInCategory="99" app:showAsAction="never" />
     <item android:id="@+id/action_populate_actual" android:title="Refresh"
         android:orderInCategory="98" app:showAsAction="never" />
+    <item android:id="@+id/action_scan" android:title="Scan" android:icon="@drawable/barcode_white_48"
+        android:orderInCategory="100" app:showAsAction="ifRoom" />
 </menu>
