@@ -47,6 +47,8 @@ public class DetailedProductDesc extends AppCompatActivity {
     private TextView discPrice;
     private TextView availability;
 
+    private TextView lowest;
+
     private FloatingActionButton addToCart;
 
     private ListView similarItems;
@@ -66,6 +68,8 @@ public class DetailedProductDesc extends AppCompatActivity {
 
 
         similarItems = (ListView) findViewById(R.id.lvSimilar);
+
+        lowest = (TextView) findViewById(R.id.tvLowest);
 
         productImage = (ImageView) findViewById(R.id.ivProduct);
         storeName = (TextView) findViewById(R.id.tvStore);
@@ -237,6 +241,40 @@ public class DetailedProductDesc extends AppCompatActivity {
                 }
             }
         });
+
+        ArrayList<JSONProducts> itemsUnparsed = db.getAllProductsByBarcode(i.getBarcode());
+        double lowests = 100000;
+        for (JSONProducts prod : itemsUnparsed){
+            String cat = getPrice(prod).substring(1);
+            try
+            {
+                Double d = Double.parseDouble(cat);
+                if (d < lowests)
+                {
+                    lowests = d;
+                }
+            } catch (Exception e)
+            {
+                e.printStackTrace();
+                lowest.setText("An error occurred");
+            }
+        }
+
+
+        String price = "$" + lowests;
+        if (getPrice(i).equals(price))
+            lowest.setText("(LOWEST)");
+        else
+            lowest.setText("Lower Price: " + price);
+    }
+
+    private String getPrice(JSONProducts p){
+        String price = p.getRetailPrice();
+        if (p.getOfferPrice() != null && !p.getOfferPrice().equals(""))
+        {
+            price = p.getOfferPrice();
+        }
+        return price;
     }
 
 
