@@ -81,9 +81,10 @@ public class ProductDB extends SQLiteOpenHelper{
 
     private void updateJSON(JSONProducts products)
     {
-        String filter = PRODUCT_KEY + "=" + products.getID();
+
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
+        cv.put(PRODUCT_KEY, products.getID());
         cv.put(PRODUCT_IMAGE, products.getImage());
         cv.put(PRODUCT_TITLE, products.getTitle());
         cv.put(PRODUCT_RETAIL_PRICE, products.getRetailPrice());
@@ -91,7 +92,10 @@ public class ProductDB extends SQLiteOpenHelper{
         cv.put(PRODUCT_STOCK, products.getStockInt());
         cv.put(PRODUCT_STORE, products.getStore());
         cv.put(PRODUCT_BARCODE, products.getBarcode());
-        db.update(TABLE_PRODUCT, cv, filter, null);
+
+        db.replace(TABLE_PRODUCT, null, cv);
+        //db.update(TABLE_PRODUCT, cv, PRODUCT_KEY + "=" + products.getID(), null);
+
         db.close();
     }
 
