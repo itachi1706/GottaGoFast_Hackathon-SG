@@ -253,6 +253,7 @@ static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
     //text_layer_set_text(textlayer_debug, "Select (Refreshes)");
   // Tell android to refresh app
   go_next_or_prev(KEY_BUTTON_EVENT, BUTTON_REFRESH);
+  vibes_double_pulse();
 }
 
 // When the up button is clicked
