@@ -1,0 +1,36 @@
+{
+    "appKeys": {},
+    "capabilities": [
+        ""
+    ],
+    "companyName": "kennethsohyq@gmail.com",
+    "longName": "HackthonSG",
+    "projectType": "native",
+    "resources": {
+        "media": [
+            {
+                "file": "images/tick.png",
+                "name": "ACTION_TICK",
+                "type": "png-trans"
+            },
+            {
+                "file": "images/previous.png",
+                "name": "ACTION_PREV",
+                "type": "png-trans"
+            },
+            {
+                "file": "images/next.png",
+                "name": "ACTION_NEXT",
+                "type": "png-trans"
+            }
+        ]
+    },
+    "sdkVersion": "2",
+    "shortName": "HackthonSG",
+    "uuid": "4093e50e-5ae4-46c5-b4da-3d41f6613f2a",
+    "versionCode": 1,
+    "versionLabel": "1.0",
+    "watchapp": {
+        "watchface": false
+    }
+}
