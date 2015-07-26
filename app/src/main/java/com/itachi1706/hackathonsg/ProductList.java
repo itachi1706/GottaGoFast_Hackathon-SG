@@ -82,13 +82,7 @@ public class ProductList extends AppCompatActivity implements SwipeRefreshLayout
             public void afterTextChanged(Editable s) {
                 String query = s.toString();
                 Log.d("TextWatcher", "Query: " + query);
-                ProductDB db = new ProductDB(ProductList.this);
-                ArrayList<JSONProducts> list = db.getProductsByQuery(query);
-                if (list != null){
-                    Log.d("TextWatcher", "Finished Search. Size: " + list.size());
-                    adapter.updateAdapter(list);
-                    adapter.notifyDataSetChanged();
-                }
+                manualSearch(query);
             }
         };
 
@@ -110,6 +104,17 @@ public class ProductList extends AppCompatActivity implements SwipeRefreshLayout
                 startActivity(descIntent);
             }
         });
+    }
+
+    public void manualSearch(String query)
+    {
+        ProductDB db = new ProductDB(ProductList.this);
+        ArrayList<JSONProducts> list = db.getProductsByQuery(query);
+        if (list != null){
+            Log.d("TextWatcher", "Finished Search. Size: " + list.size());
+            adapter.updateAdapter(list);
+            adapter.notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -232,5 +237,8 @@ public class ProductList extends AppCompatActivity implements SwipeRefreshLayout
      */
     public void processBarCode(Barcode barcode){
         searchField.setText(barcode.getContents());
+        String query = barcode.getContents();
+        Log.d("BarCode Search", "Query: " + query);
+        manualSearch(query);
     }
 }
