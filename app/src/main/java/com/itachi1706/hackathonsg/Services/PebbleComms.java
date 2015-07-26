@@ -4,7 +4,6 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
@@ -25,10 +24,6 @@ import com.itachi1706.hackathonsg.reference.ProductStorage;
 import com.itachi1706.hackathonsg.reference.StaticReferences;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Kenneth on 26/7/2015
@@ -39,6 +34,7 @@ public class PebbleComms extends Service {
     PebbleKit.PebbleDataReceiver mReceiver;
     PebbleKit.PebbleNackReceiver mNack;
     PebbleKit.PebbleAckReceiver mAck;
+    boolean isProcessing = false;
 
     private Looper serviceLooper;
     private ServiceHandler mServiceHandler;
@@ -194,6 +190,12 @@ public class PebbleComms extends Service {
         @Override
         public void handleMessage(Message msg){
             //Do stuff here
+            if (isProcessing){
+                Log.e("Pebble Comm", "Processing already. Ignoring data");
+                return;
+            }
+
+            isProcessing = true;
 
             int buttonPress = msg.arg1;
             int currentPage = msg.arg2;
@@ -237,6 +239,7 @@ public class PebbleComms extends Service {
                 StaticReferences.extraSend = 1;
 
                 StaticReferences.dict1 = dict1;
+                isProcessing = false;
                 return;
             }
 
@@ -269,13 +272,15 @@ public class PebbleComms extends Service {
 
             StaticReferences.dict1 = dict1;
             StaticReferences.dict2 = dict2;
+            isProcessing = false;
         }
 
         private void nextHandler(int page){
-            if (page != StaticReferences.products.size()){
+            if (page <= StaticReferences.products.size()){
                 //Get Next
                 repollPage();
-                if (page >= StaticReferences.products.size()){
+                if (page > StaticReferences.products.size()){
+                    isProcessing = false;
                     return;
                 }
                 JSONStoredProducts obj = StaticReferences.products.get(page-1);
@@ -308,7 +313,9 @@ public class PebbleComms extends Service {
 
                 StaticReferences.dict1 = dict1;
                 StaticReferences.dict2 = dict2;
+                isProcessing = false;
             }
+            isProcessing = false;
         }
 
         private void prevHandler(int page){
@@ -316,6 +323,7 @@ public class PebbleComms extends Service {
                 //Get Previous
                 repollPage();
                 if (page <= 1){
+                    isProcessing = false;
                     return;
                 }
                 JSONStoredProducts obj = StaticReferences.products.get(page - 2);
@@ -348,17 +356,20 @@ public class PebbleComms extends Service {
 
                 StaticReferences.dict1 = dict1;
                 StaticReferences.dict2 = dict2;
+                isProcessing = false;
             }
+            isProcessing = false;
         }
 
         private void refreshHandler(int page){
             Log.d("PebbleComm", "Received intent to mark complete :D");
 
-            String json = sp.getString("stored", "wot");
+            String json = sp.getString("storedPurchases", "wot");
             Log.d("FAVOURITES", "Favourites Pref: " + json);
 
             ProductStorage.markPurchased(PreferenceManager.getDefaultSharedPreferences(PebbleComms.this), StaticReferences.products.get(page-1));
             repollPage();
+            isProcessing = false;
         }
     }
 }
