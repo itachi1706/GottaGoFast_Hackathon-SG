@@ -24,6 +24,7 @@ import com.itachi1706.hackathonsg.Objects.Barcode;
 import com.itachi1706.hackathonsg.Objects.JSONGeneralStoredProducts;
 import com.itachi1706.hackathonsg.Objects.JSONProducts;
 import com.itachi1706.hackathonsg.Objects.JSONStoredProducts;
+import com.itachi1706.hackathonsg.Services.PebbleComms;
 import com.itachi1706.hackathonsg.libraries.barcode.IntentIntegrator;
 import com.itachi1706.hackathonsg.libraries.barcode.IntentResult;
 import com.itachi1706.hackathonsg.reference.ProductStorage;
@@ -135,6 +136,14 @@ public class MainScreen extends AppCompatActivity {
             updateList(sp);
         }
 
+        //Start Pebble Service if settings are set
+        Intent pebbleService = new Intent(this, PebbleComms.class);
+        if (sp.getBoolean("pebbleSvc", true)){
+            startService(pebbleService);
+        } else {
+            stopService(pebbleService);
+        }
+
     }
 
     private void updateList(SharedPreferences sp)
@@ -143,16 +152,16 @@ public class MainScreen extends AppCompatActivity {
         //Populate adapter
         Gson gson = new Gson();
         JSONStoredProducts[] prodTmp = gson.fromJson(json, JSONGeneralStoredProducts.class).getStorage();
-        ArrayList<JSONStoredProducts> prod = new ArrayList<>(Arrays.asList(prodTmp));
+        ArrayList<JSONStoredProducts> prod = new ArrayList<>();
 
         //Check if completed cart is hidden
         if (sp.getBoolean("hideCart", false))
         {
             //Hide completed items
-            for (JSONStoredProducts pro : prod)
+            for (JSONStoredProducts pro : prodTmp)
             {
-                if (pro.isPurchased())
-                    prod.remove(pro);
+                if (!pro.isPurchased())
+                    prod.add(pro);
             }
         }
 
