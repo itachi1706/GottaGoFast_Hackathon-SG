@@ -35,6 +35,7 @@ public class PebbleComms extends Service {
     PebbleKit.PebbleNackReceiver mNack;
     PebbleKit.PebbleAckReceiver mAck;
     boolean isProcessing = false;
+    boolean hasMarked = false;
 
     private Looper serviceLooper;
     private ServiceHandler mServiceHandler;
@@ -367,7 +368,18 @@ public class PebbleComms extends Service {
             String json = sp.getString("storedPurchases", "wot");
             Log.d("FAVOURITES", "Favourites Pref: " + json);
 
-            ProductStorage.markPurchased(PreferenceManager.getDefaultSharedPreferences(PebbleComms.this), StaticReferences.products.get(page-1));
+            if (hasMarked){
+                Log.e("PebbleComm", "Has marked within the previous 5 seconds. ignoring this now");
+                return;
+            }
+            ProductStorage.markPurchased(PreferenceManager.getDefaultSharedPreferences(PebbleComms.this), StaticReferences.products.get(page - 1));
+            hasMarked = true;
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    hasMarked = false;
+                }
+            }, 5000);
             repollPage();
             isProcessing = false;
         }
